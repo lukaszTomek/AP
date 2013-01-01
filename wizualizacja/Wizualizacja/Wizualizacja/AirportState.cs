@@ -46,6 +46,7 @@ namespace Wizualizacja
         selectedDangerous dangerous;
         int weight;
         int planeId;
+        int compId;
 
         public Suitcase(selectedDangerous s_d, int w, int p_id)
         {
@@ -69,6 +70,10 @@ namespace Wizualizacja
                 return maxSuitcaseId;
             }
         }
+        public void draw()
+        {
+
+        }
         public override string ToString()
         {
             return id.ToString()+" "+weight.ToString()+"kg";
@@ -78,8 +83,8 @@ namespace Wizualizacja
 
     static class AirportState
     {
-        static List<Plane> planesArray;
-        static List<Suitcase> suitcasesArray;
+        public static List<Plane> planesArray;
+        public static List<Suitcase> suitcasesArray;
 
         public static void initialize()
         {

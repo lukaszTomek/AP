@@ -24,7 +24,7 @@ namespace Wizualizacja
             InitializeComponent();
             client = new Client();
             running = true;
-
+            AirportState.initialize();
             drawer = new Drawer(pictureBox1.CreateGraphics());
             Thread drawingThread=new Thread(new ThreadStart( drawingLoop ) );
             drawingThread.Start();
@@ -47,6 +47,7 @@ namespace Wizualizacja
             while (running)
             {
             }
+            drawer.stop();
         }
 
         private void connectBut_Click(object sender, EventArgs e)
@@ -90,7 +91,13 @@ namespace Wizualizacja
             }
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            running = false;
+            Thread.Sleep(100);
+        }
 
+       
 
     }
 }

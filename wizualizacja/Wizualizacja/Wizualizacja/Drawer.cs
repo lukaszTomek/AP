@@ -11,11 +11,11 @@ namespace Wizualizacja
         Graphics graphics;
         Bitmap mapImage;
         bool isDrawingPossible;
-
+        static int iteration;
         public Drawer(Graphics g)
         {
             graphics = g;
-
+            iteration = 0;
             try
             {
                 mapImage  = new Bitmap(Wizualizacja.Properties.Resources.mapa);
@@ -29,14 +29,21 @@ namespace Wizualizacja
             }
             
         }
-
+        public void stop()
+        {
+            isDrawingPossible = false;
+        }
         public void draw()
         {
             if (!isDrawingPossible)
                 return;
             graphics.DrawImage(mapImage, new Point(0, 0));
-
-
+            graphics.DrawString(iteration.ToString(), SystemFonts.DefaultFont, Brushes.Black, new PointF(50, 50));
+            foreach (Suitcase s in AirportState.suitcasesArray)
+            {
+                s.draw();
+            }
+            iteration++;
         }
     }
 }

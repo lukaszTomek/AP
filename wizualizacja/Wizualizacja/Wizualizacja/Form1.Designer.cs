@@ -122,6 +122,7 @@
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "Wizualizacja";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

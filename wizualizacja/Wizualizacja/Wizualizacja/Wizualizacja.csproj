@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="AirportState.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="Component.cs" />
     <Compile Include="Drawer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
