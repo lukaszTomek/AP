@@ -1,0 +1,81 @@
+/*
+ * Component.cpp
+ *
+ *  Created on: 2012-12-05
+ *      Author: Luka
+ */
+
+#include "Component.h"
+
+Component::Component()
+{
+
+}
+Component::~Component()
+{
+
+}
+void Component::TurnOffInputs() {
+
+	return;
+}
+void Component::TurnOnInputs() {
+
+	return;
+}
+void Component::TurnOff()
+{
+	working=0;
+}
+void Component::TurnOn()
+{
+	working=1;
+}
+
+void Component::DisactivateInput()
+{
+	inputActive=0;
+}
+void Component::ActivateInput()
+{
+	inputActive=1;
+}
+
+void Component::ActivateOutput()
+{
+	outputActive=1;
+}
+void Component::DisactivateOutput()
+{
+	outputActive=0;
+}
+
+void Component::Initialize()
+{
+	sem_init(&actSem,0,1);
+
+}
+
+string Component::toString()
+{
+	string message;
+	stringstream out;
+
+	out << componentId;
+	message += out.str();
+	message +=",";
+	out.str("");
+
+	out << working;
+	message += out.str();
+	message+=",";
+	out.str("");
+
+	return message;
+}
+
+string Component::toShortString()
+{
+	return toString();
+}
+

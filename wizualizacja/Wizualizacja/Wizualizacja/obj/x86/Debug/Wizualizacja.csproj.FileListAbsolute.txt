@@ -1,0 +1,29 @@
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\Wizualizacja.Form1.resources
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\Wizualizacja.Properties.Resources.resources
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\bin\Debug\Wizualizacja.exe
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\bin\Debug\Wizualizacja.pdb
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\Wizualizacja.exe
+C:\Users\Luka\AppData\Local\Temporary Projects\Wizualizacja\obj\x86\Debug\Wizualizacja.pdb
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.exe
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.pdb
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\bin\Debug\Wizualizacja.exe
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\bin\Debug\Wizualizacja.pdb
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.Form1.resources
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.Properties.Resources.resources
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\workspace\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.NewSuitcaseDialog.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.pdb
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\bin\Debug\Wizualizacja.exe
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\bin\Debug\Wizualizacja.pdb
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.Form1.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.NewSuitcaseDialog.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.Properties.Resources.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.exe
