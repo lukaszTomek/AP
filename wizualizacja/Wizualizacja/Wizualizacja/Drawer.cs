@@ -10,6 +10,11 @@ namespace Wizualizacja
     {
         Graphics graphics;
         Bitmap mapImage;
+        
+        public static Bitmap suitcaseBmp;
+        public static Bitmap drugsBmp;
+        public static Bitmap bombBmp;
+
         bool isDrawingPossible;
         static int iteration;
         public Drawer(Graphics g)
@@ -20,6 +25,9 @@ namespace Wizualizacja
             {
                 mapImage  = new Bitmap(Wizualizacja.Properties.Resources.mapa);
                 isDrawingPossible = true;
+                suitcaseBmp = new Bitmap(Wizualizacja.Properties.Resources.suitcase);
+                drugsBmp = new Bitmap(Wizualizacja.Properties.Resources.drugs);
+                bombBmp = new Bitmap(Wizualizacja.Properties.Resources.bomb);
             }
             catch (System.IO.FileNotFoundException)
             {
@@ -41,7 +49,7 @@ namespace Wizualizacja
             graphics.DrawString(iteration.ToString(), SystemFonts.DefaultFont, Brushes.Black, new PointF(50, 50));
             foreach (Suitcase s in AirportState.suitcasesArray)
             {
-                s.draw();
+                s.draw(graphics);
             }
             iteration++;
         }
