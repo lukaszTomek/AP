@@ -1,4 +1,5 @@
-﻿namespace Wizualizacja
+﻿
+namespace Wizualizacja
 {
     partial class Form1
     {
@@ -68,6 +69,11 @@
             this.pictureBox1.Size = new System.Drawing.Size(800, 600);
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
+            this.SetStyle(System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
+                System.Windows.Forms.ControlStyles.UserPaint |
+                System.Windows.Forms.ControlStyles.Opaque |
+                System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer, true);
+            
             // 
             // tabPage2
             // 

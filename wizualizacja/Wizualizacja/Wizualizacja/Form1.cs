@@ -21,9 +21,11 @@ namespace Wizualizacja
 
         public Form1()
         {
+            this.DoubleBuffered = true;
             InitializeComponent();
             client = new Client();
             running = true;
+            
             AirportState.initialize();
             drawer = new Drawer(pictureBox1.CreateGraphics());
             Thread drawingThread=new Thread(new ThreadStart( drawingLoop ) );
@@ -33,7 +35,6 @@ namespace Wizualizacja
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             drawer.draw();
-
         }
 
         private void drawingLoop()
@@ -96,6 +97,7 @@ namespace Wizualizacja
             running = false;
             Thread.Sleep(100);
         }
+
 
        
 

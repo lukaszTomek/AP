@@ -9,8 +9,10 @@ namespace Wizualizacja
     class Drawer
     {
         Graphics graphics;
-        Bitmap mapImage;
         
+        Bitmap mapImage;
+        Bitmap bufforBmp;
+
         public static Bitmap suitcaseBmp;
         public static Bitmap drugsBmp;
         public static Bitmap bombBmp;
@@ -45,13 +47,16 @@ namespace Wizualizacja
         {
             if (!isDrawingPossible)
                 return;
-            graphics.DrawImage(mapImage, new Point(0, 0));
-            graphics.DrawString(iteration.ToString(), SystemFonts.DefaultFont, Brushes.Black, new PointF(50, 50));
+            Graphics bufferG;
+            bufforBmp = new Bitmap(mapImage);
+            bufferG = Graphics.FromImage(bufforBmp);
+            bufferG.DrawString(iteration.ToString(), SystemFonts.DefaultFont, Brushes.Black, new PointF(50, 50));
             foreach (Suitcase s in AirportState.suitcasesArray)
             {
-                s.draw(graphics);
+                s.draw(bufferG);
             }
             iteration++;
+            graphics.DrawImage(bufforBmp, 0, 0);
         }
     }
 }
