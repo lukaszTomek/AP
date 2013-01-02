@@ -77,6 +77,8 @@ namespace Wizualizacja
                     newSuitcaseDialog.getWeight(),
                     newSuitcaseDialog.getPlaneID()
                     );
+
+                client.SendRequest(Client.Serialize(new MessageInfo(suitcase)));
                 
             }
 

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
+
 namespace Wizualizacja
 {
+    
     class Client
     {
         System.Net.Sockets.TcpClient socket;
@@ -41,6 +43,19 @@ namespace Wizualizacja
             string returndata = System.Text.Encoding.ASCII.GetString(inStream);
             
             return returndata;
+        }
+
+        public static string Serialize(MessageInfo msgInfo)
+        {
+            string msg="";
+
+            return msg;
+        }
+        public static MessageInfo Deserialize(string msg)
+        {
+            MessageInfo msgInfo = new MessageInfo();
+            // TODO
+            return msgInfo;
         }
     }
 }
