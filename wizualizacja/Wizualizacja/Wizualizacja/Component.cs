@@ -7,7 +7,7 @@ namespace Wizualizacja
 {
     class Component
     {
-        int posX, posY;
+        int startX, startY, endX, endY;
         int id;
     }
 }

@@ -43,3 +43,4 @@ C:\Users\Luka\Desktop\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wi
 C:\Users\Luka\Desktop\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.NewSuitcaseDialog.resources
 C:\Users\Luka\Desktop\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.Properties.Resources.resources
 C:\Users\Luka\Desktop\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.csproj.GenerateResource.Cache
+C:\Users\Luka\Desktop\AP\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Debug\Wizualizacja.csprojResolveAssemblyReference.cache
