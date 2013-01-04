@@ -57,6 +57,8 @@ namespace Wizualizacja
             }
             iteration++;
             graphics.DrawImage(bufforBmp, 0, 0);
+            bufferG.Dispose();
+            bufforBmp.Dispose();
         }
     }
 }

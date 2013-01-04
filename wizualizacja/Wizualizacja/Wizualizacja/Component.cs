@@ -20,7 +20,9 @@ namespace Wizualizacja
         int startX, startY, endX, endY;
         
         int id;
+        bool state;
         ComponentType compType;
+
 
         public Component(int id, int sX,int sY,int eX,int eY,ComponentType cType)
         {

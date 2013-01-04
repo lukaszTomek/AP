@@ -10,11 +10,40 @@ namespace Wizualizacja
     {
         static int maxPlaneId=-1;
         DateTime departureTime;
+        int elapsedTime; 
+        //dopisałem elapsed time, bo nie wiedziałem jak korzystac z DateTime, anie tego zrzutować, ani nic, a bierzemy pod uwagę okres czasu
         string planeName;
-        int id;
+        public int id;
+        int plane_sleeve;
+
+        public string toString()
+        {
+            string s = "";
+            s += id.ToString();
+            s += ",";
+            s += elapsedTime.ToString();
+            s += ",";
+            return s;
+        }
+
+        //Konstruktor dla deserializacji do dodawania samolotów do klasy MessageInfo w polu PlanesArray - samoloty przy rękawach;
+        public Plane(int i, int t, int s)
+        {
+            id = i;
+            elapsedTime = t;
+            plane_sleeve = s;
+        }
+
+        //Konstruktor do dodawania samolotów do klasy MessageInfo w polu planesWaitingArray - samoloty oczekujące w kolejce, bez rekawow;
+        public Plane(int i, int t)
+        {
+            id = i;
+            elapsedTime = t;
+        }
         public Plane()
         {
             planeName = "default name";
+            id = 1;
             departureTime = DateTime.Now;
         }
         static int getNextPlaneId()
@@ -26,7 +55,6 @@ namespace Wizualizacja
             }
             else
             {
-                
                 maxPlaneId++;
                 return maxPlaneId;
             }

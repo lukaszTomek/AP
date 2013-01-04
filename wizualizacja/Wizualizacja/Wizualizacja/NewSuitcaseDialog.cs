@@ -83,6 +83,8 @@ namespace Wizualizacja
         private void button1_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
+            weight = (int)numericUpDown1.Value;
+            planeId = (comboBox1.SelectedItem as Plane).id;
             this.Close();
         }
 

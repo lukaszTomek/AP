@@ -1,0 +1,6 @@
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Release\Wizualizacja.Form1.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Release\Wizualizacja.NewSuitcaseDialog.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Release\Wizualizacja.Properties.Resources.resources
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Release\GenerateResource.read.1.tlog
+C:\Users\Admin\Desktop\wizualizacja\Wizualizacja\Wizualizacja\obj\x86\Release\GenerateResource.write.1.tlog

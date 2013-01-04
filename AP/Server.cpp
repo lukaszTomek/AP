@@ -51,12 +51,12 @@ void* Server::Run()
 		do
 		{
 			//WYKOMENTOWANE ¯EBYM MÓGL ZROBIC SWOJEGO REQUESTA DO DESERIALIZACJI
-			//iResult=recv(clientSock, request, 1024, 0);
-			iResult=2;
+			iResult=recv(clientSock, request, 1024, 0);
+			//iResult=2;
 			//MOJ REQUEST
-			string dane="25";
-			for(int i=0;i<dane.length();i++)
-				request[i]=dane[i];
+			//string dane="25";
+			//for(int i=0;i<dane.length();i++)
+			//	request[i]=dane[i];
 
 			/*fstream plik;
 			plik.open("request.txt", ios::in);
@@ -85,18 +85,19 @@ void* Server::Run()
 			if(!Deserialize(request,msgInfo))
 				cout<<"Problem with deserialization!"<<endl;
 
-			switch(msgInfo.ReqType)
+			switch(msgInfo.reqType)
 			{
 			case GET_STATE:
-				Serialize(reply,2);   //2 means command to send states
+				Serialize(reply,GET_STATE);
 				break; 			//1 means succes and 0 failure
 
 			case GET_FULL_STATE:
-				Serialize(reply,3);   //2 means command to send states
+				Serialize(reply,GET_FULL_STATE);
 				break; 					  //1 means succes and 0 failure
 
 			case ADD_SUITCASE:
-				MsgSendPulse(dSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.suitcaseInfo));
+				cout<<"dodawanie bagazu"<<endl;
+				MsgSendPulse(aSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.suitcaseInfo));
 				Serialize(reply,1);
 				break;
 
@@ -186,18 +187,22 @@ bool Server::Serialize(string msg, int replyInfo)
 }
 bool Server::Deserialize(string msg, MessageInfo& MI)
 {
-	switch((int)msg[0]-(int)'0')
+	cout<<msg.length()<<"|"<<msg<<"|"<<endl;
+	MI.reqType=(RequestType)((int)msg[0]-(int)'0');
+	switch(MI.reqType)
 	{
 	case ADD_SUITCASE:
 	{
 		string value;
-		int start=1, step=0, i=1;
-		int id,planeId,weight,drug=0,bomb=0;
+		int start=1, step=0;
+		unsigned i=1;
+		int id=0,planeId=0,weight=0,drug=0,bomb=0;
 		do
 		{
 			if(msg[i]==','||i==(msg.length()))
 			{
 				value=msg.substr(start,i-start);
+				cout<<"step: "<< step <<" val=|"<<value<<"|"<<endl;
 				if(step==0)
 					id=atoi(value.c_str());
 				else if (step==1)
@@ -213,16 +218,17 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 					else if(value=="0")
 						{drug=0; bomb=0;}
 					else
-						cout<<"Error of value of drugs/bombs, acceptable is 0,n,w";
+						cout<<"Error of value of drugs/bombs, acceptable is 0,n,w"<<endl;
 				}
 				else
-					cout<<"Error value of message for suitcaseInfo";
+					cout<<"Error value of message for suitcaseInfo"<<endl;
+
 				start=i+1;
 				step++;
 			}
 			i++;
 
-		} while (i<=msg.length());
+		} while (i<msg.length());             //zmienilem tutaj bo naprawilo blad
 
 		MI.deallocateSuitcase();
 		MI.allocateSuitcase(id,planeId,weight,drug,bomb);
@@ -234,8 +240,9 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 	case ADD_PLANE:
 	{
 		string value;
-		int start=1, step=0, i=1;
-		int idP,time;
+		int start=1, step=0;
+		unsigned i=1;
+		int idP=0,time=0;
 		do
 		{
 			if(msg[i]==','||i==(msg.length()))
@@ -310,6 +317,7 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 
 string Server::makeFullState()
 {
+	cout<<"make full"<<endl;
 	string msg;
 	msg[0]='4';
 
@@ -317,15 +325,18 @@ string Server::makeFullState()
 
 	for(int i=0;i<NOC;i++)
 	{
+		cout<<i<<endl;
 		for(list<Suitcase>::iterator it=Components[i]->getsuitcasesInComp().begin();it!=Components[i]->getsuitcasesInComp().end();it++)
 		{
+			cout<<"r1"<<endl;
 			pthread_rwlock_rdlock(&componentArrayLock);
+			cout<<"r2"<<endl;
 			msg+=(*it).toString();
 			msg+=";";
 			pthread_rwlock_unlock(&componentArrayLock);
 		}
 	}
-
+	cout<<"S1"<<endl;
 	for(list<Suitcase>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
 	{
 		pthread_rwlock_rdlock(&suitcasesArrayArrayLock);
@@ -334,7 +345,7 @@ string Server::makeFullState()
 		pthread_rwlock_unlock(&suitcasesArrayArrayLock);
 	}
 	msg+="/";
-
+	cout<<"S2"<<endl;
 /*INFO KOMPONENETY*/
 
 	for(int i=0;i<NOC;i++)
@@ -346,7 +357,7 @@ string Server::makeFullState()
 	}
 
 	msg+="/";
-
+	cout<<"C"<<endl;
 /*INFO SAMOLOTY*/
 
 	for(int i=0;i<NOP;i++)
@@ -377,6 +388,7 @@ string Server::makeFullState()
 	/*ILOSC WYBUCHOWYCH*/
 	msg+="/";
 
+	cout<<"FULL STATE MSG|"<<msg<<"|"<<endl;
 	return msg;
 
 }

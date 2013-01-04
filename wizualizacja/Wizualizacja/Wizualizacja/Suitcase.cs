@@ -20,21 +20,61 @@ namespace Wizualizacja
         Component component;
         Point positionToDraw;
 
+        public string toString()
+        {
+            string s="";
+            s += id.ToString();
+            s += ",";
+            s += planeId.ToString();
+            s += ",";
+            s += weight.ToString();
+            s += ",";
+            s += ((int)dangerous).ToString();
+            s += ",";
+            return s;
+        }
+
         public Suitcase(selectedDangerous s_d, int w, int p_id)
         {
             dangerous = s_d;
             weight = w;
             planeId = p_id;
-
+            
             positionToDraw = new Point();
 
             if ((id = getNextSuitcaseId()) < 0)
                 System.Windows.Forms.MessageBox.Show("Cannot create Suitcase");
-            System.Windows.Forms.MessageBox.Show(this.ToString());
+            System.Windows.Forms.MessageBox.Show(this.toString());
         }
 
+        //Konstruktor do metody GetFullState w deserializacji zeby wypełnic klase MessageInfo
         public Suitcase(selectedDangerous s_d, int w, int p_id, int comp_id, int prog)
         {
+            dangerous = s_d;
+            weight = w;
+            planeId = p_id;
+            compId = comp_id;
+            progress = prog; 
+
+            positionToDraw = new Point();
+
+        }
+
+
+        public Suitcase(int s_id, int comp_id, int prog)
+        {
+            id = s_id;
+            compId = comp_id;
+            progress = prog;
+
+            positionToDraw = new Point();
+
+        }
+
+        //Konstruktor do metody GetState w deserializacji zeby wypełnic klase MessageInfo
+        public Suitcase(selectedDangerous s_d, int s_id, int w, int p_id, int comp_id, int prog)
+        {
+            id = s_id;
             dangerous = s_d;
             weight = w;
             planeId = p_id;
@@ -89,11 +129,6 @@ namespace Wizualizacja
             }
             
 
-        }
-
-        public override string ToString()
-        {
-            return id.ToString() + " " + weight.ToString() + "kg";
         }
     };
 }

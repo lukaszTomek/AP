@@ -21,7 +21,7 @@ private:
 
 
 public:
-	RequestType ReqType;
+	RequestType reqType;
 
 		Plane * planeInfo;
 		Component * componentInfo;

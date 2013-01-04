@@ -12,9 +12,12 @@ namespace Wizualizacja
 {
     public partial class Form1 : Form
     {
-        Client client;
+        Client specialEventsClient;
+        Client stateCheckingClient;
+
         Drawer drawer;
-        bool connected=false;
+        bool sCheckingConnected = false;      // tells whether state Checking Client is working 
+        bool sEventsConnected = false;      // tells whether special Events Client is working
         bool running;
         
         
@@ -23,7 +26,8 @@ namespace Wizualizacja
         {
             this.DoubleBuffered = true;
             InitializeComponent();
-            client = new Client();
+            specialEventsClient = new Client();
+            stateCheckingClient = new Client();
             running = true;
             
             AirportState.initialize();
@@ -53,9 +57,20 @@ namespace Wizualizacja
 
         private void connectBut_Click(object sender, EventArgs e)
         {
-            if (client.Connect("192.168.153.130", 5678))
-                connected = false;
-            else connected = true;
+            if (specialEventsClient.Connect("192.168.65.128", 5678))
+                sEventsConnected = false;
+            else sEventsConnected = true;
+            if (stateCheckingClient.Connect("192.168.65.128", 5679))
+                sCheckingConnected = false;
+            else sCheckingConnected = true;
+
+            //string buf=client.SendRequest(client.Serialize(new MessageInfo(RequestType.getFullState)));
+
+            /*MessageBox.Show(buf);
+            MessageInfo msgInfo = new MessageInfo(); 
+            
+            msgInfo = client.Deserialize(buf);
+            AirportState.suitcasesArray = msgInfo.suitcasesArray;*/
         }
 
         private void newSuitcaseBut_Click(object sender, EventArgs e)
@@ -72,13 +87,16 @@ namespace Wizualizacja
             NewSuitcaseDialog newSuitcaseDialog = new NewSuitcaseDialog();
             if (newSuitcaseDialog.ShowDialog() == DialogResult.OK)
             {
+
                 Suitcase suitcase = new Suitcase(
                     newSuitcaseDialog.getDangerous(),
                     newSuitcaseDialog.getWeight(),
                     newSuitcaseDialog.getPlaneID()
                     );
+                //suitcase.toString();
 
-                client.SendRequest(Client.Serialize(new MessageInfo(suitcase)));
+
+                specialEventsClient.SendRequest(specialEventsClient.Serialize(new MessageInfo(suitcase)));
                 
             }
 
@@ -87,7 +105,7 @@ namespace Wizualizacja
 
         private void newPlaneBut_Click(object sender, EventArgs e)
         {
-            if (!connected)
+            if (!sEventsConnected)
             {
                 MessageBox.Show("You are not connected to the system!");
                 return;
@@ -98,6 +116,11 @@ namespace Wizualizacja
         {
             running = false;
             Thread.Sleep(100);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
 
 

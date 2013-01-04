@@ -71,6 +71,7 @@ void* aSThreadFunc(void * arg)
 	for (;;)
 	{
 		MsgReceivePulse(aSIChId, (void *)&pdata, sizeof(pdata), NULL);
+		cout<<"nowy suitcase"<<endl;
 	}
 
 	return 0;
@@ -107,6 +108,7 @@ void* dSThreadFunc(void * arg)
  * */
 bool addSuitcaseToQueue(Suitcase s)
 {
+	cout<<"dodawanie suitcase'a"<<endl;
 	if(suitcasesArray.size()==qSize)
 		return 0;
 	suitcasesArray.push_back(s);
