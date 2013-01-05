@@ -63,14 +63,14 @@ private:
 	char reply[1024];
 	int clientSock;  //client's socket
 	int serverSock;	 //server's socket
+	int port;
 
 public:
 
 	MessageInfo msgInfo;
-	Server(int as_id,int ds_id);
+	Server(int as_id,int ds_id,int p);
 	virtual ~Server();
 
-	//bool Init();            //returns 1 when error occurs
 	void* Run();
 
 	bool Serialize(string msg, int reply_info);

@@ -9,11 +9,12 @@
 #include "System.h"
 #include <fstream>
 
-Server::Server(int as_id, int ds_id ) {
+Server::Server(int as_id, int ds_id, int p ) {
 	// TODO Auto-generated constructor stub
 	maxPriority=0;
 	aSConnectionId=as_id;
 	dSConnectionId=ds_id;
+	this->port=p;
 }
 
 Server::~Server() {
@@ -30,7 +31,7 @@ void* Server::Run()
 
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = htonl(0);
-	sockaddr.sin_port =  htons(PORT) ;
+	sockaddr.sin_port =  htons(port) ;
 
 	result=bind( serverSock, (struct sockaddr *) &sockaddr, sizeof sockaddr );
 	if ( result<0 )
@@ -323,10 +324,11 @@ string Server::makeFullState()
 
 /*INFO BAGA¯E*/
 
+	cout<<"NOC="<<NOC<<endl;
 	for(int i=0;i<NOC;i++)
 	{
 		cout<<i<<endl;
-		for(list<Suitcase>::iterator it=Components[i]->getsuitcasesInComp().begin();it!=Components[i]->getsuitcasesInComp().end();it++)
+		for(list<Suitcase>::iterator it=componentsArray[i]->getsuitcasesInComp().begin();it!=componentsArray[i]->getsuitcasesInComp().end();it++)
 		{
 			cout<<"r1"<<endl;
 			pthread_rwlock_rdlock(&componentArrayLock);
@@ -337,10 +339,10 @@ string Server::makeFullState()
 		}
 	}
 	cout<<"S1"<<endl;
-	for(list<Suitcase>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
+	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
 	{
 		pthread_rwlock_rdlock(&suitcasesArrayArrayLock);
-		msg+=(*it).toString();
+		msg+=(*(*it)).toString();
 		msg+=";";
 		pthread_rwlock_unlock(&suitcasesArrayArrayLock);
 	}
@@ -351,7 +353,7 @@ string Server::makeFullState()
 	for(int i=0;i<NOC;i++)
 	{
 		pthread_rwlock_rdlock(&componentArrayLock);
-		msg+=Components[i]->toString();
+		msg+=componentsArray[i]->toString();
 		pthread_rwlock_unlock(&componentArrayLock);
 		msg+=";";
 	}
@@ -363,17 +365,17 @@ string Server::makeFullState()
 	for(int i=0;i<NOP;i++)
 	{
 		pthread_rwlock_rdlock(&planesArrayLock);
-		msg+=Planes[i]->toString();
+		msg+=actPlanes[i]->toString();
 		pthread_rwlock_unlock(&planesArrayLock);
 		msg+=";";
 	}
 	msg+="/";
 /*KOLEJKA SAMOLOTÓW*/
 
-	for(list<Plane>::iterator it=planesArray.begin();it!=planesArray.end();it++)
+	for(list<Plane*>::iterator it=planesArray.begin();it!=planesArray.end();it++)
 	{
 		pthread_rwlock_rdlock(&planesArrayArrayLock);
-		msg+=(*it).toString();
+		msg+=(*it)->toString();
 		pthread_rwlock_unlock(&planesArrayArrayLock);
 		msg+=";";
 	}
@@ -402,7 +404,7 @@ string Server::makeState()
 
 		for(int i=0;i<NOC;i++)
 		{
-			for(list<Suitcase>::iterator it=Components[i]->getsuitcasesInComp().begin();it!=Components[i]->getsuitcasesInComp().end();it++)
+			for(list<Suitcase>::iterator it=componentsArray[i]->getsuitcasesInComp().begin();it!=componentsArray[i]->getsuitcasesInComp().end();it++)
 			{
 				pthread_rwlock_rdlock(&componentArrayLock);
 				msg+=(*it).toShortString();
@@ -413,10 +415,10 @@ string Server::makeState()
 
 	msg+="/";
 	/*kolejka do check-inow*/
-	for(list<Suitcase>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
+	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
 	{
 		pthread_rwlock_rdlock(&suitcasesArrayArrayLock);
-		msg+=(*it).toShortString();
+		msg+=(*it)->toShortString();
 		msg+=";";
 		pthread_rwlock_unlock(&suitcasesArrayArrayLock);
 	}
@@ -428,7 +430,7 @@ string Server::makeState()
 	for(int i=0;i<NOC;i++)
 	{
 		pthread_rwlock_rdlock(&componentArrayLock);
-		msg+=Components[i]->toShortString();
+		msg+=componentsArray[i]->toShortString();
 		pthread_rwlock_unlock(&componentArrayLock);
 		msg+=";";
 	}
@@ -441,17 +443,17 @@ string Server::makeState()
 		for(int i=0;i<NOP;i++)
 		{
 			pthread_rwlock_rdlock(&planesArrayLock);
-			msg+=Planes[i]->toShortString();
+			msg+=actPlanes[i]->toShortString();
 			pthread_rwlock_unlock(&planesArrayLock);
 			msg+=";";
 		}
 		msg+="/";
 	/*KOLEJKA SAMOLOTÓW*/
 
-		for(list<Plane>::iterator it=planesArray.begin();it!=planesArray.end();it++)
+		for(list<Plane*>::iterator it=planesArray.begin();it!=planesArray.end();it++)
 		{
 			pthread_rwlock_rdlock(&planesArrayArrayLock);
-			msg+=(*it).toShortString();
+			msg+=(*it)->toShortString();
 			pthread_rwlock_rdlock(&planesArrayArrayLock);
 			msg+=";";
 		}
@@ -470,26 +472,4 @@ string Server::makeState()
 
 }
 
-
-
-
-/*
-bool Server::Init()
-{
-
-	pthread_attr_init(&serverThreadAttr);
-	param.sched_priority = sched_get_priority_min(policy);
-	pthread_attr_setschedpolicy(&serverThreadAttr, SCHED_FIFO);
-
-	cout<<"Tworzenie watku..."<<endl;
-	errvalue=pthread_create(&serverThread,&serverThreadAttr, proces, NULL);
-	cout<<"Watek utworzony"<<endl;
-	if (errvalue!=0)
-	{
-		cout<< "Cannot create server thread."<<endl;
-		return 1;
-	}
-	cout<<"Watek serwera utworzony poprawnie"<<endl;
-	return 0;
-}*/
 

@@ -24,7 +24,7 @@ namespace Wizualizacja
             } 
             catch (SocketException e) 
             {
-                System.Windows.Forms.MessageBox.Show("Problem connecting to host");
+                //System.Windows.Forms.MessageBox.Show("Problem connecting to host");
                 Console.WriteLine(e.ToString());
                 return true;
             }
@@ -32,16 +32,27 @@ namespace Wizualizacja
         }
         public string SendRequest(string data)
         {
-            NetworkStream serverStream = socket.GetStream();
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(data);
-            serverStream.Write(outStream, 0, outStream.Length);
-            serverStream.Flush();
 
-            byte[] inStream = new byte[10025];
-            serverStream.Read(inStream, 0, (int)socket.ReceiveBufferSize);
-            string returndata = System.Text.Encoding.ASCII.GetString(inStream);
+            try
+            {
+                NetworkStream serverStream = socket.GetStream();
+                byte[] outStream = System.Text.Encoding.ASCII.GetBytes(data);
+                serverStream.Write(outStream, 0, outStream.Length);
+                serverStream.Flush();
+
+                byte[] inStream = new byte[10025];
+                serverStream.Read(inStream, 0, (int)socket.ReceiveBufferSize);
+                string returndata = System.Text.Encoding.ASCII.GetString(inStream);
+                return returndata;
+            }
+            catch (Exception)
+            {
+
+                System.Windows.Forms.MessageBox.Show("Problems with connection");
+                return "";
+            }
             
-            return returndata;
+            
         }
 
         public string Serialize(MessageInfo msgInfo)

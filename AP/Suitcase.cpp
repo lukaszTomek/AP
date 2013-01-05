@@ -10,7 +10,6 @@
 
 Suitcase::Suitcase(int sId, int pId, int w, int d, int b)
 {
-	// TODO How to contruct suitcase with a reference to its component
 	suitcaseId=sId;
 	planeId=pId;
 	drugs=d;

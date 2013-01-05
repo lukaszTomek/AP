@@ -37,12 +37,13 @@ pthread_t dSIThread;
 pthread_attr_t dSIThreadAttr;
 int dSIChId;
 
-list <Suitcase> suitcasesArray;
-list <Plane> planesArray;
-Component* Components[NOC];
-Plane* Planes[NOP];
+list <Suitcase*> suitcasesArray;
+list <Plane*> planesArray;
+Component* componentsArray[NOC];
+Plane* actPlanes[NOP];
 
-Server* server;
+Server* specialEventsServer;
+Server* statesCheckingServer;
 unsigned qSize;
 bool on;
 
@@ -106,7 +107,7 @@ void* dSThreadFunc(void * arg)
  *
  *
  * */
-bool addSuitcaseToQueue(Suitcase s)
+bool addSuitcaseToQueue(Suitcase* s)
 {
 	cout<<"dodawanie suitcase'a"<<endl;
 	if(suitcasesArray.size()==qSize)
@@ -124,6 +125,11 @@ bool run(){
 
 	on=1;
 	qSize=1024;
+
+	//componentsArray[0]=new costam();
+	//TODO fill componentsArray
+	//probably in loop
+	//componentsArray[25]=new costam();
 
 	//pthread_rwlock_init(&conveyorArrayLock, NULL);
 	//pthread_rwlock_init(&connectorArrayLock, NULL);
@@ -156,15 +162,30 @@ bool run(){
 		return 1;
 	}
 
-	server=new Server(aSIChId,dSIChId);
-	if(server->Start())
+	specialEventsServer =new Server(aSIChId,dSIChId,SPECIAL_PORT);
+	if(specialEventsServer->Start())
 	{
-		cout<<"Wystapil blad"<<endl;
+		cout<<"Wystapil blad przy ladowaniu serwera"<<endl;
 		return 1;
 	}
 	else
 		cout<<"Serwer zaladowany"<<endl;
+
+	statesCheckingServer =new Server(aSIChId,dSIChId,STATES_PORT);
+	if(statesCheckingServer->Start())
+	{
+		cout<<"Wystapil blad przy ladowaniu serwera"<<endl;
+		return 1;
+	}
+	else
+		cout<<"Serwer zaladowany"<<endl;
+
+	//DEBBUG
+
+	cout<<"Metoda zwrocila"<<statesCheckingServer->makeFullState()<<endl;
+	///////
 	return 0;
+
 }
 
 bool getOn()

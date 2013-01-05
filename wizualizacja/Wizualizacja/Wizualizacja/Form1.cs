@@ -19,8 +19,8 @@ namespace Wizualizacja
         bool sCheckingConnected = false;      // tells whether state Checking Client is working 
         bool sEventsConnected = false;      // tells whether special Events Client is working
         bool running;
-        
-        
+        bool isGetFullStateNecessary;
+        bool isJustDrawing;    
 
         public Form1()
         {
@@ -29,7 +29,8 @@ namespace Wizualizacja
             specialEventsClient = new Client();
             stateCheckingClient = new Client();
             running = true;
-            
+            isGetFullStateNecessary = true;
+
             AirportState.initialize();
             drawer = new Drawer(pictureBox1.CreateGraphics());
             Thread drawingThread=new Thread(new ThreadStart( drawingLoop ) );
@@ -38,7 +39,18 @@ namespace Wizualizacja
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+            if (isJustDrawing)
+                return;
+            isJustDrawing = true;
+            if (sCheckingConnected && isGetFullStateNecessary)
+            {
+                stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState)));
+                isGetFullStateNecessary = false;
+            }
+            else if(sCheckingConnected)
+                stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getState)));
             drawer.draw();
+            isJustDrawing = false;
         }
 
         private void drawingLoop()
@@ -63,7 +75,8 @@ namespace Wizualizacja
             if (stateCheckingClient.Connect("192.168.65.128", 5679))
                 sCheckingConnected = false;
             else sCheckingConnected = true;
-
+            if (!sEventsConnected || !sCheckingConnected)
+                MessageBox.Show("Problem with connection to host");
             //string buf=client.SendRequest(client.Serialize(new MessageInfo(RequestType.getFullState)));
 
             /*MessageBox.Show(buf);

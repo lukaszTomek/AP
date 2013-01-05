@@ -25,10 +25,10 @@ extern pthread_rwlock_t suitcasesArrayArrayLock;
 //extern pthread_rwlock_t plantArrayLock;
 extern pthread_rwlock_t planesArrayLock;
 
-extern Component * Components[NOC];
-extern Plane * Planes[NOP];
-extern list <Plane> planesArray;
-extern list <Suitcase> suitcasesArray;
+extern Component * componentsArray[NOC];
+extern Plane * actPlanes[NOP];
+extern list <Plane*> planesArray;
+extern list <Suitcase*> suitcasesArray;
 
 //TODO jeszcze inne locki
 
