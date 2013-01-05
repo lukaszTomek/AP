@@ -23,11 +23,10 @@ protected:
 	int errvalue;
 
 public:
-	bool Start();
+	bool start();
 	virtual void* Run()=0;
 	static void* ThreadFunc(void * arg)
 	{
-		cout<<"Rzutowanie funkcji watku..."<<endl;
 		Runnable * p=(reinterpret_cast<Runnable*>(arg));
 		pthread_getschedparam( p->thread, &(p->policy), &(p->param));
 		if(p->maxPriority)
@@ -35,8 +34,7 @@ public:
 		else
 			(p->param).sched_priority = sched_get_priority_min(p->policy);
 		cout<<"priorytet ustawiany: "<<(p->param).sched_priority<<endl;
-		int r=pthread_setschedparam(p->thread,p->policy,&(p->param));
-		cout<<r<<endl;
+		//int r=pthread_setschedparam(p->thread,p->policy,&(p->param));
 		sched_param parameters;
 		pthread_getschedparam( p->thread, &(p->policy), &parameters);
 

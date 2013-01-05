@@ -11,7 +11,8 @@ Conveyor::Conveyor(int b)
 {
 	componentId=b;
 	working=1;
-
+	maxPriority=1;
+	start();
 }
 Conveyor::~Conveyor()
 {
@@ -20,5 +21,14 @@ Conveyor::~Conveyor()
 
 void *Conveyor::Run()
 {
-
+	while(true)
+	{
+		delay(200);
+		cout<<"a"<<endl;
+		if(!suitcasesInComp.empty())
+		{
+			Suitcase* s= suitcasesInComp.front();
+			s->setProgress((s->getProgress()+5)%100);
+		}
+	}
 }

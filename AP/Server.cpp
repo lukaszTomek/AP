@@ -58,7 +58,6 @@ void* Server::Run()
 			if ( iResult > 0 )
 			{
 				cout<<"Bytes received: "<< iResult<<endl;
-				cout<<endl<<"otrzymalem:"<<request<<endl;
 			}
 			else if ( iResult == 0 )
 				printf("Connection closed\n");
@@ -69,7 +68,6 @@ void* Server::Run()
 				cout<<"That means: "<< strerror( errvalue )<<endl;
 			}
 			cout<<"Request";
-			cout<<request<<endl;      //debug
 
 			if(!Deserialize(request,msgInfo))
 				cout<<"Problem with deserialization!"<<endl;
@@ -109,7 +107,6 @@ void* Server::Run()
 				cout<<"Urecognised command"<<endl;
 				break;
 			};
-			cout<<"blabla bla dupa debug:"<<reply<<"----"<<endl;
 			iResult=send(clientSock,reply.c_str(),reply.length(),0);
 			if ( iResult > 0 )
 			{
@@ -178,7 +175,6 @@ bool Server::Serialize(string& msg, int replyInfo)
 }
 bool Server::Deserialize(string msg, MessageInfo& MI)
 {
-	cout<<msg.length()<<"|"<<msg<<"|"<<endl;
 	MI.reqType=(RequestType)((int)msg[0]-(int)'0');
 	switch(MI.reqType)
 	{
@@ -193,7 +189,6 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 			if(msg[i]==','||i==(msg.length()))
 			{
 				value=msg.substr(start,i-start);
-				cout<<"step: "<< step <<" val=|"<<value<<"|"<<endl;
 				if(step==0)
 					id=atoi(value.c_str());
 				else if (step==1)
@@ -239,7 +234,6 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 			if(msg[i]==','||i==(msg.length()))
 			{
 				value=msg.substr(start,i-start);
-				cout<<"step = "<<step<<" value = "<<value<<" start = "<<start<<" i= "<<i<<endl;
 				if(step==0)
 					idP=atoi(value.c_str());
 				else if (step==1)
@@ -308,28 +302,26 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 
 string Server::makeFullState()
 {
-	cout<<"make full"<<endl;
-	string msg;
-	msg[0]='4';
+	string msg="";
+	msg+="4";
 
 /*INFO BAGA¯E*/
 
-	cout<<"NOC="<<NOC<<endl;
 	for(int i=0;i<NOC;i++)
 	{
-		cout<<i<<endl;
 		for(list<Suitcase*>::iterator it=componentsArray[i]->suitcasesInComp.begin();it!=componentsArray[i]->suitcasesInComp.end(); it++)
 		{
-			//cout<<"Rozmiar dla comp 5 "<<componentsArray[5]->suitcasesInComp.size()<<endl;
+
 			pthread_rwlock_rdlock(&componentsArrayLock);
-			//cout<<"r22"<<endl;
+
 			msg+=(*it)->toString();
-			//cout<<"r22"<<endl;
+			cout<<"MESSAGE NOW"<<msg<<endl;
+
 			msg+=";";
 			pthread_rwlock_unlock(&componentsArrayLock);
 		}
 	}
-	///cout<<"S1"<<endl;
+
 	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
 	{
 		pthread_rwlock_rdlock(&suitcasesArrayLock);
@@ -338,7 +330,7 @@ string Server::makeFullState()
 		pthread_rwlock_unlock(&suitcasesArrayLock);
 	}
 	msg+="/";
-	//cout<<"S2"<<endl;
+
 /*INFO KOMPONENETY*/
 	for(int i=0;i<NOC;i++)
 	{
@@ -349,7 +341,6 @@ string Server::makeFullState()
 	}
 
 	msg+="/";
-	cout<<"C"<<endl;
 /*INFO SAMOLOTY*/
 	for(list<Plane*>::iterator it=actPlanes.begin();it!=actPlanes.end();it++)
 	{
@@ -369,25 +360,29 @@ string Server::makeFullState()
 	}
 
 	msg+="/";
-	/*FLAGA WYKRYCIA NARKOTYKÓW*/
-	msg+="/";
-	/*FLAGA WYKRYCIA WYBUCHOWYCH*/
-	msg+="/";
-	/*ILOSC NARKOTYKOW*/
-	msg+="/";
-	/*ILOSC WYBUCHOWYCH*/
-	msg+="/";
 
-	cout<<"FULL STATE MSG|"<<msg<<"|"<<endl;
+	msg+="0";
+	msg+="/";
+	/*TODO FLAGA WYKRYCIA NARKOTYKÓW*/
+	msg+="0";
+	msg+="/";
+	/*TODO FLAGA WYKRYCIA WYBUCHOWYCH*/
+	msg+="0";
+	msg+="/";
+	/*TODO ILOSC NARKOTYKOW*/
+	msg+="0";
+	msg+="/";
+	/*TODO ILOSC WYBUCHOWYCH*/
+
+
 	return msg;
 
 }
 
 string Server::makeState()
 {
-	string msg;
-	msg[0]='5';
-
+	string msg="";
+	msg+="5";
 	/*INFO BAGA¯E*/
 
 		for(int i=0;i<NOC;i++)
@@ -447,14 +442,19 @@ string Server::makeState()
 	}
 
 	msg+="/";
-	/*FLAGA WYKRYCIA NARKOTYKÓW*/
+
+	msg+="0";
 	msg+="/";
-	/*FLAGA WYKRYCIA WYBUCHOWYCH*/
+	/*TODO FLAGA WYKRYCIA NARKOTYKÓW*/
+	msg+="0";
 	msg+="/";
-	/*ILOSC NARKOTYKOW*/
+	/*TODO FLAGA WYKRYCIA WYBUCHOWYCH*/
+	msg+="0";
 	msg+="/";
-	/*ILOSC WYBUCHOWYCH*/
+	/*TODO ILOSC NARKOTYKOW*/
+	msg+="0";
 	msg+="/";
+	/*TODO ILOSC WYBUCHOWYCH*/
 
 	return msg;
 

@@ -35,6 +35,9 @@ public:
 	string toString();
 	string toShortString();
 	int getCompId();
+
+	int getProgress();
+	void setProgress(int prog);
 };
 
 #endif /* SUITCASE_H_ */

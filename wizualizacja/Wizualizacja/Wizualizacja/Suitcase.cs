@@ -108,6 +108,8 @@ namespace Wizualizacja
                         component = c;
                         break;
                     }
+            Console.WriteLine("IDKOMPONENTU GDZIE JEST");
+            Console.WriteLine(compId);
             if (component.getId() != compId)
             {
                 System.Windows.Forms.MessageBox.Show("Incorrect component ID");

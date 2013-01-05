@@ -7,7 +7,7 @@
 
 #include "Runnable.h"
 
-bool Runnable::Start()
+bool Runnable::start()
 {
 
 	pthread_attr_init(&threadAttr);
@@ -15,15 +15,13 @@ bool Runnable::Start()
 	pthread_attr_setschedpolicy(&threadAttr, SCHED_FIFO);
 
 	errvalue=pthread_create(&thread,&threadAttr, ThreadFunc, this);
-	cout<<"Watek utworzony"<<endl;
 
-	cout<<"Blad (lub nie):"<<errvalue<<endl;
 	if (errvalue!=0)
 	{
-		cout<< "Cannot create server thread."<<endl;
+		cout<< "Cannot create thread."<<endl;
 		return 1;
 	}
-	cout<<"Watek serwera utworzony poprawnie"<<endl;
+
 	return 0;
 };
 

@@ -149,7 +149,9 @@ bool run(){
 
 //debug - dodawanie nowej walizki do systemu.
 
-	componentsArray[5]->addsuitcaseToComp(new Suitcase(5,125,125,1,0,componentsArray[5]));
+	componentsArray[5]->addsuitcaseToComp(new Suitcase(9,125,125,1,0,componentsArray[8]));
+	componentsArray[24]->addsuitcaseToComp(new Suitcase(9,125,125,1,0,componentsArray[24]));
+
 
 
 
@@ -185,7 +187,7 @@ bool run(){
 	}
 
 	specialEventsServer =new Server(aSIChId,dSIChId,SPECIAL_PORT);
-	if(specialEventsServer->Start())
+	if(specialEventsServer->start())
 	{
 		cout<<"Wystapil blad przy ladowaniu serwera"<<endl;
 		return 1;
@@ -194,7 +196,7 @@ bool run(){
 		cout<<"Serwer zaladowany"<<endl;
 
 	statesCheckingServer =new Server(aSIChId,dSIChId,STATES_PORT);
-	if(statesCheckingServer->Start())
+	if(statesCheckingServer->start())
 	{
 		cout<<"Wystapil blad przy ladowaniu serwera"<<endl;
 		return 1;

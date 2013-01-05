@@ -44,6 +44,16 @@ int Suitcase::getCompId()
 {
 	return component->getComponentId();
 }
+
+int Suitcase::getProgress()
+{
+	return progress;
+}
+void Suitcase::setProgress(int prog)
+{
+	progress=prog;
+}
+
 string Suitcase::toString()
 {
 	string addon;

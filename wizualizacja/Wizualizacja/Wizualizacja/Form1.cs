@@ -65,7 +65,7 @@ namespace Wizualizacja
 
         private void drawingLoop()
         {
-            const float fixedFPS = 10;
+            const float fixedFPS = 8;
             const float timeStep = 1000.0f / fixedFPS;
 
             System.Timers.Timer timer = new System.Timers.Timer(timeStep);
