@@ -23,12 +23,12 @@ void *Conveyor::Run()
 {
 	while(true)
 	{
-		delay(200);
+		delay(20);
 		cout<<"a"<<endl;
 		if(!suitcasesInComp.empty())
 		{
 			Suitcase* s= suitcasesInComp.front();
-			s->setProgress((s->getProgress()+5)%100);
+			s->setProgress((s->getProgress()+1)%100);
 		}
 	}
 }
