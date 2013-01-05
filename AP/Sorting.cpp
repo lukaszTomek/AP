@@ -7,11 +7,18 @@
 
 #include "Sorting.h"
 
-Sorting::Sorting() {
-	// TODO Auto-generated constructor stub
+Sorting::Sorting(int b)
+{
+	componentId=b;
+	working=1;
 
 }
 
 Sorting::~Sorting() {
 	// TODO Auto-generated destructor stub
+}
+
+void *Sorting::Run()
+{
+
 }

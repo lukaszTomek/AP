@@ -7,11 +7,18 @@
 
 #include "Drugs.h"
 
-Drugs::Drugs() {
-	// TODO Auto-generated constructor stub
+Drugs::Drugs(int b)
+{
+	componentId=b;
+	working=1;
 
 }
 
 Drugs::~Drugs() {
 	// TODO Auto-generated destructor stub
+}
+
+void *Drugs::Run()
+{
+
 }

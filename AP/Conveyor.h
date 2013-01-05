@@ -12,8 +12,9 @@
 
 class Conveyor: public Component {
 public:
-	Conveyor();
+	Conveyor(int b);
 	virtual ~Conveyor();
+	void *Run();
 };
 
 #endif /* CONVEYOR_H_ */

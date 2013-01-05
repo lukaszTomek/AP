@@ -44,14 +44,21 @@ namespace Wizualizacja
             isJustDrawing = true;
             if (sCheckingConnected && isGetFullStateNecessary)
             {
+                Console.WriteLine("PRZED1");
                 AirportState.interpretMakeStatesQuery(
                         stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
                         stateCheckingClient);
-
+                Console.WriteLine("PO1");
                 isGetFullStateNecessary = false;
             }
-            else if(sCheckingConnected)
-                stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getState)));
+            else if (sCheckingConnected)
+            {
+                Console.WriteLine("PRZED2");
+                AirportState.interpretMakeStatesQuery(
+                        stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
+                        stateCheckingClient);
+                Console.WriteLine("PO2");
+            }
             drawer.draw();
             isJustDrawing = false;
         }

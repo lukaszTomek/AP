@@ -7,10 +7,17 @@
 
 #include "Checkin.h"
 
-/*Checkin::Checkin() {
+Checkin::Checkin(int b) {
+	componentId=b;
+	working=1;
 	// TODO Auto-generated constructor stub
 }
 
 Checkin::~Checkin() {
 	// TODO Auto-generated destructor stub
-}*/
+}
+
+void *Checkin::Run()
+{
+
+}

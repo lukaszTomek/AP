@@ -12,8 +12,11 @@
 
 class Connector: public Component {
 public:
-	Connector();
+	Connector(int b);
 	virtual ~Connector();
+	void *Run();
 };
+
+
 
 #endif /* CONNECTOR_H_ */

@@ -7,12 +7,18 @@
 
 #include "Conveyor.h"
 
-Conveyor::Conveyor() {
-
-	// TODO Auto-generated constructor stub
+Conveyor::Conveyor(int b)
+{
+	componentId=b;
+	working=1;
 
 }
-
-Conveyor::~Conveyor() {
+Conveyor::~Conveyor()
+{
 	// TODO Auto-generated destructor stub
+}
+
+void *Conveyor::Run()
+{
+
 }

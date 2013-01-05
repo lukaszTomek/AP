@@ -11,6 +11,7 @@
 #include "Runnable.h"
 #include "Component.h"
 #include "Plane.h"
+#include <cstring>
 
 using namespace std;
 
@@ -60,7 +61,7 @@ private:
 	int aSConnectionId;
 	int dSConnectionId;
 	char request[1024];
-	char reply[1024];
+	string reply;
 	int clientSock;  //client's socket
 	int serverSock;	 //server's socket
 	int port;
@@ -73,7 +74,7 @@ public:
 
 	void* Run();
 
-	bool Serialize(string msg, int reply_info);
+	bool Serialize(string& msg, int reply_info);
 	bool Deserialize(string msg, MessageInfo& MI);
 	string makeFullState();
 	string makeState();

@@ -35,15 +35,21 @@ namespace Wizualizacja
 
             try
             {
+                Console.WriteLine("SR1");
                 NetworkStream serverStream = socket.GetStream();
                 byte[] outStream = System.Text.Encoding.ASCII.GetBytes(data);
                 serverStream.Write(outStream, 0, outStream.Length);
                 serverStream.Flush();
 
+                Console.WriteLine("SR2");
+
                 byte[] inStream = new byte[10025];
                 serverStream.Read(inStream, 0, (int)socket.ReceiveBufferSize);
                 string returndata = System.Text.Encoding.ASCII.GetString(inStream);
+                Console.WriteLine("SR3");
                 return returndata;
+
+                
             }
             catch (Exception)
             {
@@ -462,7 +468,9 @@ namespace Wizualizacja
                 {
                     if (step == 0)
                     {
-                        suitcase_id = Convert.ToInt32(msg.Substring(start, i - start));
+                        string a = msg.Substring(start, i - start);
+                        Console.WriteLine(a);
+                        suitcase_id = Convert.ToInt32(a);
                         start = i + 1;
                         step++;
 

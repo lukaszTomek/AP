@@ -12,8 +12,9 @@
 
 class Checkin: public Component {
 public:
-	Checkin();
+	Checkin(int b);
 	virtual ~Checkin();
+	void *Run();
 };
 
 #endif /* CHECKIN_H_ */

@@ -14,19 +14,14 @@
 
 using namespace std;
 
-//extern pthread_rwlock_t conveyorArrayLock;
-extern pthread_rwlock_t componentArrayLock;
-extern pthread_rwlock_t planesArrayArrayLock;
-//extern pthread_rwlock_t connectorArrayLock;
-//extern pthread_rwlock_t checkinArrayLock;
-//extern pthread_rwlock_t drugsArrayLock;
-//extern pthread_rwlock_t explosivesArrayLock;
-extern pthread_rwlock_t suitcasesArrayArrayLock;
-//extern pthread_rwlock_t plantArrayLock;
+
+extern pthread_rwlock_t componentsArrayLock;
 extern pthread_rwlock_t planesArrayLock;
+extern pthread_rwlock_t suitcasesArrayLock;
+extern pthread_rwlock_t actPlanesLock;
 
 extern Component * componentsArray[NOC];
-extern Plane * actPlanes[NOP];
+extern list <Plane*> actPlanes;
 extern list <Plane*> planesArray;
 extern list <Suitcase*> suitcasesArray;
 

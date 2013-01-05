@@ -19,6 +19,7 @@ using namespace std;
 
 class Component : public Runnable {
 
+
 protected:
 	vector <Component*> inputs;
 	vector <Component*> oututs;
@@ -28,13 +29,13 @@ protected:
 	bool working;
 	sem_t actSem;
 	int componentId;
-	list <Suitcase> suitcasesInComp;
 
 public:
-	list <Suitcase> getsuitcasesInComp()
+	list <Suitcase*> suitcasesInComp;
+	void addsuitcaseToComp(Suitcase* s)
 	{
-		return suitcasesInComp;
-	};
+		suitcasesInComp.push_front(s);
+	}
 	int getComponentId()
 	{
 		return componentId;

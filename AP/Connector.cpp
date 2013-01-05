@@ -7,11 +7,18 @@
 
 #include "Connector.h"
 
-Connector::Connector() {
-	// TODO Auto-generated constructor stub
+Connector::Connector(int b)
+{
+	componentId=b;
+	working=1;
 
 }
 
 Connector::~Connector() {
 	// TODO Auto-generated destructor stub
+}
+
+void *Connector::Run()
+{
+
 }

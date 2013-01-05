@@ -7,11 +7,18 @@
 
 #include "Explosives.h"
 
-Explosives::Explosives() {
-	// TODO Auto-generated constructor stub
+Explosives::Explosives(int b)
+{
+	componentId=b;
+	working=1;
 
 }
 
 Explosives::~Explosives() {
 	// TODO Auto-generated destructor stub
+}
+
+void *Explosives::Run()
+{
+
 }

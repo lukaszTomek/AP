@@ -53,19 +53,7 @@ void* Server::Run()
 		{
 			//WYKOMENTOWANE ¯EBYM MÓGL ZROBIC SWOJEGO REQUESTA DO DESERIALIZACJI
 			iResult=recv(clientSock, request, 1024, 0);
-			//iResult=2;
-			//MOJ REQUEST
-			//string dane="25";
-			//for(int i=0;i<dane.length();i++)
-			//	request[i]=dane[i];
 
-			/*fstream plik;
-			plik.open("request.txt", ios::in);
-			if(plik.good())
-				cout<<"OKEJ"<<endl<<endl;
-			else
-				cout<<"NIE OK"<<endl<<endl;
-			getline( plik, request );*/
 
 			if ( iResult > 0 )
 			{
@@ -121,8 +109,8 @@ void* Server::Run()
 				cout<<"Urecognised command"<<endl;
 				break;
 			};
-
-			iResult=send(clientSock,reply,strlen(reply),0);
+			cout<<"blabla bla dupa debug:"<<reply<<"----"<<endl;
+			iResult=send(clientSock,reply.c_str(),reply.length(),0);
 			if ( iResult > 0 )
 			{
 				cout<<"Bytes send: "<<iResult<<endl;
@@ -144,7 +132,7 @@ void* Server::Run()
 	return 0;
 }
 
-bool Server::Serialize(string msg, int replyInfo)
+bool Server::Serialize(string& msg, int replyInfo)
 {
 	switch(replyInfo)
 		{
@@ -171,11 +159,13 @@ bool Server::Serialize(string msg, int replyInfo)
 		case GET_FULL_STATE:
 			{
 				msg=makeFullState();
+				cout<<"ha1"<<msg<<"ha2"<<endl;
 				break;
 			}
 		case GET_STATE:
 			{
 				msg=makeState();
+				cout<<"ha11"<<msg<<"ha22"<<endl;
 				break;
 			}
 		default:
@@ -328,55 +318,53 @@ string Server::makeFullState()
 	for(int i=0;i<NOC;i++)
 	{
 		cout<<i<<endl;
-		for(list<Suitcase>::iterator it=componentsArray[i]->getsuitcasesInComp().begin();it!=componentsArray[i]->getsuitcasesInComp().end();it++)
+		for(list<Suitcase*>::iterator it=componentsArray[i]->suitcasesInComp.begin();it!=componentsArray[i]->suitcasesInComp.end(); it++)
 		{
-			cout<<"r1"<<endl;
-			pthread_rwlock_rdlock(&componentArrayLock);
-			cout<<"r2"<<endl;
-			msg+=(*it).toString();
+			//cout<<"Rozmiar dla comp 5 "<<componentsArray[5]->suitcasesInComp.size()<<endl;
+			pthread_rwlock_rdlock(&componentsArrayLock);
+			//cout<<"r22"<<endl;
+			msg+=(*it)->toString();
+			//cout<<"r22"<<endl;
 			msg+=";";
-			pthread_rwlock_unlock(&componentArrayLock);
+			pthread_rwlock_unlock(&componentsArrayLock);
 		}
 	}
-	cout<<"S1"<<endl;
+	///cout<<"S1"<<endl;
 	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
 	{
-		pthread_rwlock_rdlock(&suitcasesArrayArrayLock);
+		pthread_rwlock_rdlock(&suitcasesArrayLock);
 		msg+=(*(*it)).toString();
 		msg+=";";
-		pthread_rwlock_unlock(&suitcasesArrayArrayLock);
+		pthread_rwlock_unlock(&suitcasesArrayLock);
 	}
 	msg+="/";
-	cout<<"S2"<<endl;
+	//cout<<"S2"<<endl;
 /*INFO KOMPONENETY*/
-
 	for(int i=0;i<NOC;i++)
 	{
-		pthread_rwlock_rdlock(&componentArrayLock);
+		pthread_rwlock_rdlock(&componentsArrayLock);
 		msg+=componentsArray[i]->toString();
-		pthread_rwlock_unlock(&componentArrayLock);
+		pthread_rwlock_unlock(&componentsArrayLock);
 		msg+=";";
 	}
 
 	msg+="/";
 	cout<<"C"<<endl;
 /*INFO SAMOLOTY*/
-
-	for(int i=0;i<NOP;i++)
+	for(list<Plane*>::iterator it=actPlanes.begin();it!=actPlanes.end();it++)
 	{
-		pthread_rwlock_rdlock(&planesArrayLock);
-		msg+=actPlanes[i]->toString();
-		pthread_rwlock_unlock(&planesArrayLock);
+		pthread_rwlock_rdlock(&actPlanesLock);
+		msg+=(*it)->toString();
 		msg+=";";
+		pthread_rwlock_unlock(&actPlanesLock);
 	}
 	msg+="/";
 /*KOLEJKA SAMOLOTÓW*/
-
 	for(list<Plane*>::iterator it=planesArray.begin();it!=planesArray.end();it++)
 	{
-		pthread_rwlock_rdlock(&planesArrayArrayLock);
+		pthread_rwlock_rdlock(&planesArrayLock);
 		msg+=(*it)->toString();
-		pthread_rwlock_unlock(&planesArrayArrayLock);
+		pthread_rwlock_unlock(&planesArrayLock);
 		msg+=";";
 	}
 
@@ -404,12 +392,12 @@ string Server::makeState()
 
 		for(int i=0;i<NOC;i++)
 		{
-			for(list<Suitcase>::iterator it=componentsArray[i]->getsuitcasesInComp().begin();it!=componentsArray[i]->getsuitcasesInComp().end();it++)
+			for(list<Suitcase*>::iterator it=componentsArray[i]->suitcasesInComp.begin();it!=componentsArray[i]->suitcasesInComp.end();it++)
 			{
-				pthread_rwlock_rdlock(&componentArrayLock);
-				msg+=(*it).toShortString();
+				pthread_rwlock_rdlock(&componentsArrayLock);
+				msg+=(*it)->toShortString();
 				msg+=";";
-				pthread_rwlock_unlock(&componentArrayLock);
+				pthread_rwlock_unlock(&componentsArrayLock);
 			}
 		}
 
@@ -417,10 +405,10 @@ string Server::makeState()
 	/*kolejka do check-inow*/
 	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
 	{
-		pthread_rwlock_rdlock(&suitcasesArrayArrayLock);
+		pthread_rwlock_rdlock(&suitcasesArrayLock);
 		msg+=(*it)->toShortString();
 		msg+=";";
-		pthread_rwlock_unlock(&suitcasesArrayArrayLock);
+		pthread_rwlock_unlock(&suitcasesArrayLock);
 	}
 
 	msg+="/";
@@ -429,9 +417,9 @@ string Server::makeState()
 
 	for(int i=0;i<NOC;i++)
 	{
-		pthread_rwlock_rdlock(&componentArrayLock);
+		pthread_rwlock_rdlock(&componentsArrayLock);
 		msg+=componentsArray[i]->toShortString();
-		pthread_rwlock_unlock(&componentArrayLock);
+		pthread_rwlock_unlock(&componentsArrayLock);
 		msg+=";";
 	}
 
@@ -439,24 +427,24 @@ string Server::makeState()
 
 
 	/*INFO SAMOLOTY*/
+	for(list<Plane*>::iterator it=actPlanes.begin();it!=actPlanes.end();it++)
+	{
+		pthread_rwlock_rdlock(&actPlanesLock);
+		msg+=(*it)->toString();
+		msg+=";";
+		pthread_rwlock_unlock(&actPlanesLock);
+	}
 
-		for(int i=0;i<NOP;i++)
-		{
-			pthread_rwlock_rdlock(&planesArrayLock);
-			msg+=actPlanes[i]->toShortString();
-			pthread_rwlock_unlock(&planesArrayLock);
-			msg+=";";
-		}
 		msg+="/";
 	/*KOLEJKA SAMOLOTÓW*/
 
-		for(list<Plane*>::iterator it=planesArray.begin();it!=planesArray.end();it++)
-		{
-			pthread_rwlock_rdlock(&planesArrayArrayLock);
-			msg+=(*it)->toShortString();
-			pthread_rwlock_rdlock(&planesArrayArrayLock);
-			msg+=";";
-		}
+	for(list<Plane*>::iterator it=planesArray.begin();it!=planesArray.end();it++)
+	{
+		pthread_rwlock_rdlock(&planesArrayLock);
+		msg+=(*it)->toShortString();
+		pthread_rwlock_rdlock(&planesArrayLock);
+		msg+=";";
+	}
 
 	msg+="/";
 	/*FLAGA WYKRYCIA NARKOTYKÓW*/

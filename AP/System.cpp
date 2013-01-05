@@ -7,20 +7,22 @@
 
 #include "System.h"
 #include "Server.h"
+#include "Checkin.h"
+#include "Conveyor.h"
+#include "Connector.h"
+#include "Drugs.h"
+#include "Explosives.h"
+#include "Sorting.h"
+
 
 
 using namespace std;
 
-//extern pthread_rwlock_t conveyorArrayLock;
-pthread_rwlock_t componentArrayLock;
-pthread_rwlock_t planesArrayArrayLock;
-//extern pthread_rwlock_t connectorArrayLock;
-//extern pthread_rwlock_t checkinArrayLock;
-//extern pthread_rwlock_t drugsArrayLock;
-//extern pthread_rwlock_t explosivesArrayLock;
-pthread_rwlock_t suitcasesArrayArrayLock;
-//extern pthread_rwlock_t plantArrayLock;
+
+pthread_rwlock_t componentsArrayLock;
 pthread_rwlock_t planesArrayLock;
+pthread_rwlock_t suitcasesArrayLock;
+pthread_rwlock_t actPlanesLock;
 
 /*
  * shortcuts:
@@ -29,7 +31,7 @@ pthread_rwlock_t planesArrayLock;
  * dS - dropSuitcase
  * hC - hurtConveyor
  */
-pthread_rwlock_t conveyorArrayLock;
+
 pthread_t aSIThread;
 pthread_attr_t aSIThreadAttr;
 int aSIChId;
@@ -40,7 +42,7 @@ int dSIChId;
 list <Suitcase*> suitcasesArray;
 list <Plane*> planesArray;
 Component* componentsArray[NOC];
-Plane* actPlanes[NOP];
+list <Plane*> actPlanes;
 
 Server* specialEventsServer;
 Server* statesCheckingServer;
@@ -126,21 +128,41 @@ bool run(){
 	on=1;
 	qSize=1024;
 
-	//componentsArray[0]=new costam();
-	//TODO fill componentsArray
-	//probably in loop
-	//componentsArray[25]=new costam();
+	componentsArray[0]=new Drugs(55);
+	componentsArray[1]=new Explosives(75);
+	componentsArray[2]=new Sorting(95);
+	int i=3;
+	for(int n=1;n<=4;n++,i++)
+		componentsArray[i]=new Checkin(n);
+
+	for(int n=10;n<=90;i++,n=n+10)
+		componentsArray[i]=new Connector(n);
+
+	for(int n=110;n<=440;i++,n=n+110)
+		componentsArray[i]=new Conveyor(n);
+
+	for(int n=1020;n<=4050;i++,n=n+1010)
+		componentsArray[i]=new Conveyor(n);
+
+	componentsArray[i]=new Conveyor(6070);
+	componentsArray[++i]=new Conveyor(8090);
+
+//debug - dodawanie nowej walizki do systemu.
+
+	componentsArray[5]->addsuitcaseToComp(new Suitcase(5,125,125,1,0,componentsArray[5]));
+
+
 
 	//pthread_rwlock_init(&conveyorArrayLock, NULL);
 	//pthread_rwlock_init(&connectorArrayLock, NULL);
-	pthread_rwlock_init(&componentArrayLock, NULL);
-	pthread_rwlock_init(&planesArrayArrayLock, NULL);
+	pthread_rwlock_init(&componentsArrayLock, NULL);
+	pthread_rwlock_init(&planesArrayLock, NULL);
 	//pthread_rwlock_init(&checkinArrayLock, NULL);
 	//pthread_rwlock_init(&drugsArrayLock, NULL);
 	//pthread_rwlock_init(&explosivesArrayLock, NULL);
-	pthread_rwlock_init(&suitcasesArrayArrayLock, NULL);
+	pthread_rwlock_init(&suitcasesArrayLock, NULL);
 	//pthread_rwlock_init(&plantArrayLock, NULL);
-	pthread_rwlock_init(&planesArrayLock, NULL);
+	pthread_rwlock_init(&actPlanesLock, NULL);
 
 
 

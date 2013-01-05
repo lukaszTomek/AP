@@ -12,8 +12,9 @@
 
 class Drugs: public Component {
 public:
-	Drugs();
+	Drugs(int b);
 	virtual ~Drugs();
+	void *Run();
 };
 
 #endif /* DRUGS_H_ */

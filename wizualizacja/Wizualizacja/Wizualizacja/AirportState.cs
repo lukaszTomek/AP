@@ -119,7 +119,9 @@ namespace Wizualizacja
 
         public static void interpretMakeStatesQuery(string data, Client client)
         {
+            Console.WriteLine("I1");
             MessageInfo MI = client.Deserialize(data);
+            Console.WriteLine("I2");
             suitcasesArray = MI.suitcasesArray;
             planesArray = MI.planesWaitingArray;
             planesInUse = MI.planesArray;

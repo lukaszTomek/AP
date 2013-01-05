@@ -8,6 +8,16 @@
 #include "Suitcase.h"
 #include "Component.h"
 
+Suitcase::Suitcase(int sId, int pId, int w, int d, int b, Component* c)
+{
+	suitcaseId=sId;
+	planeId=pId;
+	drugs=d;
+	weight=w;
+	explosive=b;
+	progress=0;
+	component=c;
+}
 Suitcase::Suitcase(int sId, int pId, int w, int d, int b)
 {
 	suitcaseId=sId;
@@ -66,12 +76,14 @@ string Suitcase::toString()
 	message +=",";
 	out.str("");
 
-	message+=getCompId();
-	message+=",";
+	out << getCompId();
+	message += out.str();
+	message +=",";
 	out.str("");
 
-	message+=progress;
-	message+=",";
+	out << progress;
+	message += out.str();
+	message +=",";
 	out.str("");
 
 	return message;
@@ -87,12 +99,14 @@ string Suitcase::toShortString()
 	message +=",";
 	out.str("");
 
-	message+=getCompId();
-	message+=",";
+	out << getCompId();
+	message += out.str();
+	message +=",";
 	out.str("");
 
-	message+=progress;
-	message+=",";
+	out << progress;
+	message += out.str();
+	message +=",";
 	out.str("");
 
 	return message;

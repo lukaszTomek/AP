@@ -12,8 +12,9 @@
 
 class Explosives: public Component {
 public:
-	Explosives();
+	Explosives(int b);
 	virtual ~Explosives();
+	void *Run();
 };
 
 #endif /* EXPLOSIVES_H_ */

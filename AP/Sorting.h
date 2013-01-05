@@ -12,8 +12,9 @@
 
 class Sorting: public Component {
 public:
-	Sorting();
+	Sorting(int b);
 	virtual ~Sorting();
+	void *Run();
 };
 
 #endif /* SORTING_H_ */

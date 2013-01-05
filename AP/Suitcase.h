@@ -28,6 +28,7 @@ private:
 
 public:
 
+	Suitcase(int,int,int,int,int,Component*);
 	Suitcase(int,int,int,int,int);
 	Suitcase();
 	virtual ~Suitcase();
