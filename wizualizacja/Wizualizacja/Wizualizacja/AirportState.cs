@@ -69,6 +69,7 @@ namespace Wizualizacja
     static class AirportState
     {
         public static List<Plane> planesArray;
+        public static List<Plane> planesInUse;
         public static List<Suitcase> suitcasesArray;
         public static List<Component> components;
 
@@ -115,5 +116,15 @@ namespace Wizualizacja
         {
             return planesArray;
         }
+
+        public static void interpretMakeStatesQuery(string data, Client client)
+        {
+            MessageInfo MI = client.Deserialize(data);
+            suitcasesArray = MI.suitcasesArray;
+            planesArray = MI.planesWaitingArray;
+            planesInUse = MI.planesArray;
+
+        }
+
     };
 }

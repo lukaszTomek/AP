@@ -32,8 +32,8 @@ namespace Wizualizacja
         public RequestType reqType;
 
         public List<Suitcase> suitcasesArray;   //jeśli reqType = addSuitcase  to suitcaseArray zawiera tylko jeden suitcase
-        public List<Plane> planesArray;         //analogicznie ^
-        public List<Plane> planesWaitingArray;
+        public List<Plane> planesArray;         //planes on sleeves
+        public List<Plane> planesWaitingArray;         
         public List<StateInfo> statesArray;  // informacje o stanach komponentów
         public bool problems;   //zapytania add suitcase itd w odpowiedzi zrotnej dostają kod 1 albo 0. ta informacja jest przechowywana tutaj
 

@@ -44,7 +44,10 @@ namespace Wizualizacja
             isJustDrawing = true;
             if (sCheckingConnected && isGetFullStateNecessary)
             {
-                stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState)));
+                AirportState.interpretMakeStatesQuery(
+                        stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
+                        stateCheckingClient);
+
                 isGetFullStateNecessary = false;
             }
             else if(sCheckingConnected)
