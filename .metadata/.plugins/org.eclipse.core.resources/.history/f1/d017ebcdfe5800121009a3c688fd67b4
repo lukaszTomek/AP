@@ -7,7 +7,7 @@
 #include <errno.h>
 #include "System.h"
 using namespace std;
-/*KOMENTARZ*/
+
 int main(int argc, char *argv[])
 {
 
