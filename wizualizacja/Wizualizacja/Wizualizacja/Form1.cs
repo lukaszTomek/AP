@@ -79,10 +79,10 @@ namespace Wizualizacja
 
         private void connectBut_Click(object sender, EventArgs e)
         {
-            if (specialEventsClient.Connect("192.168.65.128", 5678))
+            if (specialEventsClient.Connect("192.168.153.130", 5678))
                 sEventsConnected = false;
             else sEventsConnected = true;
-            if (stateCheckingClient.Connect("192.168.65.128", 5679))
+            if (stateCheckingClient.Connect("192.168.153.130", 5679))
                 sCheckingConnected = false;
             else sCheckingConnected = true;
             if (!sEventsConnected || !sCheckingConnected)

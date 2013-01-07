@@ -24,6 +24,7 @@ void *Conveyor::Run()
 	while(true)
 	{
 		delay(20);
+		cout<<"a"<<endl;
 		if(!suitcasesInComp.empty())
 		{
 			Suitcase* s= suitcasesInComp.front();
