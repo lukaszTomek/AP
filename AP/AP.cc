@@ -7,7 +7,7 @@
 #include <errno.h>
 #include "System.h"
 using namespace std;
-/*KOMENTARZ*/
+//ABRAKADABRA
 int main(int argc, char *argv[])
 {
 
