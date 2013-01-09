@@ -129,6 +129,14 @@ namespace Wizualizacja
                 MessageBox.Show("You are not connected to the system!");
                 return;
             }
+            NewPlaneDialog planeDialog= new NewPlaneDialog();
+            if (planeDialog.ShowDialog() == DialogResult.OK)
+            {
+                Plane plane=new Plane(); //TO DO fill right constructor with data from dialog Box
+                MessageInfo MI = new MessageInfo(RequestType.addPlane);
+                MI.planesArray.Add(plane);
+                specialEventsClient.SendRequest(specialEventsClient.Serialize(MI));
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

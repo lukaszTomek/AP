@@ -58,6 +58,12 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="MessageInfo.cs" />
+    <Compile Include="NewPlaneDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewPlaneDialog.Designer.cs">
+      <DependentUpon>NewPlaneDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="NewSuitcaseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
