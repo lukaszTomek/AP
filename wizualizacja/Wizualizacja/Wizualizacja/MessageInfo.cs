@@ -42,6 +42,9 @@ namespace Wizualizacja
         public int number_drugs;
         public int number_bombs;
 
+        public int maxPlaneId;
+        public int maxSuitcaseId;
+
         public MessageInfo()
         {
             suitcasesArray = new List<Suitcase>();

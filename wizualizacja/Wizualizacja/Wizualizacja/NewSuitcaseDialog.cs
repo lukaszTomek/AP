@@ -82,10 +82,15 @@ namespace Wizualizacja
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            
             weight = (int)numericUpDown1.Value;
-            planeId = (comboBox1.SelectedItem as Plane).id;
-            this.Close();
+            if (comboBox1.SelectedItem != null)
+            {
+                planeId = (comboBox1.SelectedItem as Plane).id;
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else MessageBox.Show("Tou have to fill all the fields");
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

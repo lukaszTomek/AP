@@ -168,9 +168,11 @@ namespace Wizualizacja
             Suitcase s;
             StateInfo c;
             Plane p;
-
+            
             string val;
 
+            MI.maxPlaneId = -1;
+            MI.maxSuitcaseId = -1;
             //string msg = "014,43222,33,n,1043,50,;14324,22,33,n,1990,50,;/15190,22,;17,12,;/152,215,1,;8099,151,2,;151,122,3,;/152,215,;8099,151,;/0/1/12/10/";
             /*suitcaseinfo*/
             while (true)
@@ -242,9 +244,11 @@ namespace Wizualizacja
                 {
                     step = 0;
                     start++;
+                    if (suitcase_id > MI.maxSuitcaseId)
+                        MI.maxSuitcaseId = suitcase_id;
                     s=new Suitcase(danger, suitcase_id, weight, plane_id, c_id, progress);
                     MI.suitcasesArray.Add(s);
-
+                    
                     //Console.WriteLine("NEXT ITEM");
                 }
                 if (msg[i] == '/')
@@ -335,8 +339,11 @@ namespace Wizualizacja
                 {
                     step = 0;
                     start++;
+                    if (p_id > MI.maxPlaneId)
+                        MI.maxPlaneId = p_id;
                     p = new Plane(p_id, time, sleeve);
                     MI.planesArray.Add(p);
+
                     /*Console.WriteLine(p_id);
                     Console.WriteLine(time);
                     Console.WriteLine(sleeve);
@@ -378,6 +385,8 @@ namespace Wizualizacja
                 {
                     step = 0;
                     start++;
+                    if (p_id > MI.maxPlaneId)
+                        MI.maxPlaneId = p_id;
                     p = new Plane(p_id, time);
                     MI.planesWaitingArray.Add(p);
                     /*Console.WriteLine(p_id);
@@ -443,6 +452,7 @@ namespace Wizualizacja
             return MI;
         }
 
+        
         public static MessageInfo getState(string msg)
         {
             MessageInfo MI = new MessageInfo();

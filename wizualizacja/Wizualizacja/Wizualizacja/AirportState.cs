@@ -46,6 +46,11 @@ namespace Wizualizacja
             id = 1;
             departureTime = DateTime.Now;
         }
+        public static void setMaxPlaneId(int id)
+        {
+            if (maxPlaneId == -1)
+                maxPlaneId = id;
+        }
         static int getNextPlaneId()
         {
             if (maxPlaneId < 0)
@@ -103,28 +108,24 @@ namespace Wizualizacja
             components.Add(new Component(70, 615, 275, 615, 275, ComponentType.CONNECTOR));
             components.Add(new Component(75, 585, 275, 585, 275, ComponentType.DRUG_TESTER));
 
-            //example suitcases for debug
-            ////////////////////////////////
-            suitcasesArray.Add(new Suitcase(selectedDangerous.NONE, 100, 1, 110,0));
-            suitcasesArray.Add(new Suitcase(selectedDangerous.NONE, 100, 1, 110, 100));
-            suitcasesArray.Add(new Suitcase(selectedDangerous.EXPLOSIVES, 100, 1, 110, 50));
-            suitcasesArray.Add(new Suitcase(selectedDangerous.DRUGS, 100, 1, 60, 0));
-            suitcasesArray.Add(new Suitcase(selectedDangerous.DRUGS, 100, 1, 70, 50));
-            ////////////////////////////////
         }
         public static  List<Plane> getPlanes()
         {
+
             return planesArray;
         }
 
         public static void interpretMakeStatesQuery(string data, Client client)
         {
-            Console.WriteLine("I1");
+
             MessageInfo MI = client.Deserialize(data);
-            Console.WriteLine("I2");
+
             suitcasesArray = MI.suitcasesArray;
             planesArray = MI.planesWaitingArray;
             planesInUse = MI.planesArray;
+
+            Plane.setMaxPlaneId(MI.maxPlaneId);
+            Suitcase.setMaxSuitcaseId(MI.maxSuitcaseId);
 
         }
 

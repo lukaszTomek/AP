@@ -44,20 +44,20 @@ namespace Wizualizacja
             isJustDrawing = true;
             if (sCheckingConnected && isGetFullStateNecessary)
             {
-                Console.WriteLine("PRZED1");
+
                 AirportState.interpretMakeStatesQuery(
                         stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
                         stateCheckingClient);
-                Console.WriteLine("PO1");
+
                 isGetFullStateNecessary = false;
             }
             else if (sCheckingConnected)
             {
-                Console.WriteLine("PRZED2");
+
                 AirportState.interpretMakeStatesQuery(
                         stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
                         stateCheckingClient);
-                Console.WriteLine("PO2");
+
             }
             drawer.draw();
             isJustDrawing = false;
@@ -79,10 +79,10 @@ namespace Wizualizacja
 
         private void connectBut_Click(object sender, EventArgs e)
         {
-            if (specialEventsClient.Connect("192.168.153.130", 5678))
+            if (specialEventsClient.Connect("192.168.65.128", 5678))
                 sEventsConnected = false;
             else sEventsConnected = true;
-            if (stateCheckingClient.Connect("192.168.153.130", 5679))
+            if (stateCheckingClient.Connect("192.168.65.128", 5679))
                 sCheckingConnected = false;
             else sCheckingConnected = true;
             if (!sEventsConnected || !sCheckingConnected)
@@ -98,14 +98,11 @@ namespace Wizualizacja
 
         private void newSuitcaseBut_Click(object sender, EventArgs e)
         {
-            /*if (!connected)
+            if (!sEventsConnected)
             {
                 MessageBox.Show("You are not connected to the system!");
                 return;
-            }*/
-
-            //string s=client.SendRequest("wysylam bagaz");
-            //MessageBox.Show(s);
+            }
 
             NewSuitcaseDialog newSuitcaseDialog = new NewSuitcaseDialog();
             if (newSuitcaseDialog.ShowDialog() == DialogResult.OK)
@@ -116,7 +113,6 @@ namespace Wizualizacja
                     newSuitcaseDialog.getWeight(),
                     newSuitcaseDialog.getPlaneID()
                     );
-                //suitcase.toString();
 
 
                 specialEventsClient.SendRequest(specialEventsClient.Serialize(new MessageInfo(suitcase)));

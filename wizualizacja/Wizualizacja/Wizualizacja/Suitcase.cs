@@ -46,7 +46,11 @@ namespace Wizualizacja
                 System.Windows.Forms.MessageBox.Show("Cannot create Suitcase");
             System.Windows.Forms.MessageBox.Show(this.toString());
         }
-
+        public static  void setMaxSuitcaseId(int id)
+        {
+            if (maxSuitcaseId == -1)
+                maxSuitcaseId = id;
+        }
         //Konstruktor do metody GetFullState w deserializacji zeby wypełnic klase MessageInfo
         public Suitcase(selectedDangerous s_d, int w, int p_id, int comp_id, int prog)
         {
