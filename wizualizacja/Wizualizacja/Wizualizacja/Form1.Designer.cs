@@ -69,11 +69,6 @@ namespace Wizualizacja
             this.pictureBox1.Size = new System.Drawing.Size(800, 600);
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
-            /*this.SetStyle(System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
-                System.Windows.Forms.ControlStyles.UserPaint |
-                System.Windows.Forms.ControlStyles.Opaque |
-                System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer, true);*/
-            
             // 
             // tabPage2
             // 
@@ -129,6 +124,7 @@ namespace Wizualizacja
             this.Name = "Form1";
             this.Text = "Wizualizacja";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

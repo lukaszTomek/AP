@@ -49,7 +49,7 @@ public:
 	};
 	void deallocatePlane()
 	{
-		delete[] planeInfo;
+		delete planeInfo;
 	};
 };
 

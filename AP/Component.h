@@ -22,7 +22,7 @@ class Component : public Runnable {
 
 protected:
 	vector <Component*> inputs;
-	vector <Component*> oututs;
+	vector <Component*> outputs;
 	int inputsSize,outputsSize;
 	bool inputActive;
 	bool outputActive;
@@ -54,6 +54,8 @@ public:
 	string toString();
 	string toShortString();
 	virtual void Initialize();
+	void addInput(Component *);
+	void addOutput(Component *);
 
 };
 

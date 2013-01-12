@@ -79,3 +79,13 @@ string Component::toShortString()
 	return toString();
 }
 
+void Component::addOutput(Component * c)
+{
+	outputs.push_back(c);
+}
+void Component::addInput(Component * c)
+{
+	inputs.push_back(c);
+}
+
+

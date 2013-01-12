@@ -54,6 +54,7 @@ namespace Wizualizacja
         }
         public MessageInfo(Suitcase s)   //constructor when adding new suitcase. Example of using in Form1.cs
         {
+            
             reqType = RequestType.addSuitcase;
             suitcasesArray = new List<Suitcase>();
             suitcasesArray.Add(s);
@@ -61,6 +62,11 @@ namespace Wizualizacja
         public MessageInfo(RequestType rType)
         {
             reqType = rType;
+            if (reqType == RequestType.addPlane)
+            {
+                planesArray = new List<Plane>();
+            }
+            
         }
     }
 }

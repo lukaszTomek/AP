@@ -45,11 +45,12 @@ namespace Wizualizacja
             if (sCheckingConnected && isGetFullStateNecessary)
             {
 
+
                 AirportState.interpretMakeStatesQuery(
                         stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
                         stateCheckingClient);
 
-                isGetFullStateNecessary = false;
+                isGetFullStateNecessary = true;
             }
             else if (sCheckingConnected)
             {
@@ -66,7 +67,7 @@ namespace Wizualizacja
         private void drawingLoop()
         {
             const float fixedFPS = 25;
-            const float timeStep = 1000.0f / fixedFPS;
+            const float timeStep = 1000.0f / fixedFPS ;
 
             System.Timers.Timer timer = new System.Timers.Timer(timeStep);
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -132,10 +133,13 @@ namespace Wizualizacja
             NewPlaneDialog planeDialog= new NewPlaneDialog();
             if (planeDialog.ShowDialog() == DialogResult.OK)
             {
-                Plane plane=new Plane(); //TO DO fill right constructor with data from dialog Box
+                Plane plane=new Plane(planeDialog.getTime()); 
                 MessageInfo MI = new MessageInfo(RequestType.addPlane);
                 MI.planesArray.Add(plane);
-                specialEventsClient.SendRequest(specialEventsClient.Serialize(MI));
+                //MI=specialEventsClient.Deserialize
+                Console.WriteLine("fk"+specialEventsClient.Serialize(MI));
+                    specialEventsClient.SendRequest(specialEventsClient.Serialize(MI));
+                //Console.WriteLine
             }
         }
 
@@ -149,6 +153,7 @@ namespace Wizualizacja
         {
 
         }
+
 
 
        

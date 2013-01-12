@@ -11,6 +11,9 @@ namespace Wizualizacja
     class Client
     {
         System.Net.Sockets.TcpClient socket;
+        
+        string ip;
+        int port;
 
         public Client()
         {
@@ -19,6 +22,9 @@ namespace Wizualizacja
 
         public bool Connect(string IP, int port)
         {
+            ip = IP;
+            this.port = port;
+
             try{
             socket.Connect(IP, port);
             } 
@@ -35,18 +41,17 @@ namespace Wizualizacja
 
             try
             {
-                Console.WriteLine("SR1");
+                if(port==5678)
+                    Console.WriteLine(data);
                 NetworkStream serverStream = socket.GetStream();
                 byte[] outStream = System.Text.Encoding.ASCII.GetBytes(data);
                 serverStream.Write(outStream, 0, outStream.Length);
                 serverStream.Flush();
 
-                Console.WriteLine("SR2");
-
                 byte[] inStream = new byte[10025];
                 serverStream.Read(inStream, 0, (int)socket.ReceiveBufferSize);
                 string returndata = System.Text.Encoding.ASCII.GetString(inStream);
-                Console.WriteLine("SR3");
+
                 return returndata;
 
                 
@@ -78,6 +83,7 @@ namespace Wizualizacja
                 {
                     msg += "1";
                     msg += msgInfo.planesArray[0].toString();
+                    Console.WriteLine(msg);
                     break;
                 }
 
@@ -112,42 +118,49 @@ namespace Wizualizacja
         public MessageInfo Deserialize(string msg)
         {
             MessageInfo msgInfo = new MessageInfo();
-
-            switch ((RequestType)((int)msg[0] - (int)'0'))
+            //if (port == 5678) 
+            //    Console.WriteLine("dostalem " + msg);
+            if (msg == "")
             {
-                case RequestType.addSuitcase:
+                System.Windows.Forms.MessageBox.Show(port.ToString());
+
+                return msgInfo;
+            }
+            switch (((int)msg[0] - (int)'0'))
+            {
+                case 0:
                     {
                         msgInfo.problems = true;
                         break;
                     }
-                case RequestType.addPlane:
+                case 1:
+                    {
+                        msgInfo.problems = false;
+                        break;
+                    }
+                case 2:
                     {
                         msgInfo.problems = true;
                         break;
                     }
-                case RequestType.hurtConveyor:
+                case 3:
                     {
                         msgInfo.problems = true;
                         break;
                     }
-                case RequestType.dropSuitcaseFromConveyor:
-                    {
-                        msgInfo.problems = true;
-                        break;
-                    }
-                case RequestType.getFullState:
+                case 4:
                     {
                         msgInfo = getFullState(msg);
                         break;
                     }
-                case RequestType.getState:
+                case 5:
                     {
                         msgInfo = getState(msg);
                         break;
                     }
                 default:
                     {
-                        Console.WriteLine("Error of deserialization. Unknown request type");
+                        //Console.WriteLine("Error of deserialization. Unknown request type");
                         break;
                     }
             }

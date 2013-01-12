@@ -53,11 +53,12 @@ void* Server::Run()
 		{
 			//WYKOMENTOWANE ¯EBYM MÓGL ZROBIC SWOJEGO REQUESTA DO DESERIALIZACJI
 			iResult=recv(clientSock, request, 1024, 0);
-
+			cout<<"nowy req |"<<request<<"|"<<endl;
 
 			if ( iResult > 0 )
 			{
-				cout<<"Bytes received: "<< iResult<<endl;
+				//cout<<"Bytes received: "<< iResult<<endl;
+				if(iResult>1)cout<<request<<endl;
 			}
 			else if ( iResult == 0 )
 				printf("Connection closed\n");
@@ -67,7 +68,7 @@ void* Server::Run()
 				cout<<"The error generated was "<< errvalue<<endl;
 				cout<<"That means: "<< strerror( errvalue )<<endl;
 			}
-			cout<<"Request";
+
 
 			if(!Deserialize(request,msgInfo))
 				cout<<"Problem with deserialization!"<<endl;
@@ -90,7 +91,9 @@ void* Server::Run()
 
 			case ADD_PLANE:
 				//MsgSendPulse(dSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.planeInfo));
+				cout<<"a"<<endl;
 				Serialize(reply,1);
+				cout<<"b"<<endl;
 				break;
 
 			case DROP_SUITCASE_FROM_CONVEYOR:
@@ -107,11 +110,13 @@ void* Server::Run()
 				cout<<"Urecognised command"<<endl;
 				break;
 			};
+			if(port==SPECIAL_PORT)
+			cout<<"odp "<<reply<<endl;
 			iResult=send(clientSock,reply.c_str(),reply.length(),0);
 			if ( iResult > 0 )
 			{
-				cout<<"Bytes send: "<<iResult<<endl;
-				cout<<endl<<"Sended: "<<reply<<endl;
+				//cout<<"Bytes send: "<<iResult<<endl;
+				//cout<<endl<<"Sended: "<<reply<<endl;
 			}
 			else if ( iResult == 0 )
 				cout<<"Connection closed"<<endl;
@@ -122,7 +127,7 @@ void* Server::Run()
 				cout<<"That means: "<<strerror( errvalue ) ;
 				break;
 			}
-
+			cout<<"k";
 		}while(iResult);
 
 	}
@@ -156,13 +161,11 @@ bool Server::Serialize(string& msg, int replyInfo)
 		case GET_FULL_STATE:
 			{
 				msg=makeFullState();
-				cout<<"ha1"<<msg<<"ha2"<<endl;
 				break;
 			}
 		case GET_STATE:
 			{
 				msg=makeState();
-				cout<<"ha11"<<msg<<"ha22"<<endl;
 				break;
 			}
 		default:
@@ -170,7 +173,7 @@ bool Server::Serialize(string& msg, int replyInfo)
 			msg="0";
 			return 0;
 		}
-	cout<<msg;
+	//cout<<msg;
 	return 1;
 }
 bool Server::Deserialize(string msg, MessageInfo& MI)
@@ -229,24 +232,32 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 		int start=1, step=0;
 		unsigned i=1;
 		int idP=0,time=0;
+		cout<<"len "<<msg.length()<<endl;
 		do
 		{
 			if(msg[i]==','||i==(msg.length()))
 			{
 				value=msg.substr(start,i-start);
 				if(step==0)
+				{
 					idP=atoi(value.c_str());
+					cout<<"idP "<<idP<<" "<<i<<endl;
+				}
 				else if (step==1)
+				{
 					time=atoi(value.c_str());
+					cout<<"time "<<time<<" "<<i<<endl;
+				}
 				else
-					cout<<"Error value of message for planeInfo";
+					cout<<"Error value of message for planeInfo"<<endl;
 				start=i+1;
 				step++;
 			}
 			i++;
-
 		} while (i<=msg.length());
+		cout<<"jeden"<<endl;
 		MI.deallocatePlane();
+		cout<<"dwa"<<endl;
 		MI.allocatePlane(idP,time);
 
 		cout<<"AllocatePlane "<<"Plane Id "<<idP<<" time "<<time<<endl;
@@ -283,12 +294,12 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 		}
 	case GET_FULL_STATE:
 		{
-			cout<<"Client want to get a full state"<<endl;
+			//cout<<"Client want to get a full state"<<endl;
 			break;
 		}
 	case GET_STATE:
 		{
-			cout<<"Client want to get a state"<<endl;
+			//cout<<"Client want to get a state"<<endl;
 			break;
 		}
 	default:
@@ -315,7 +326,6 @@ string Server::makeFullState()
 			pthread_rwlock_rdlock(&componentsArrayLock);
 
 			msg+=(*it)->toString();
-			cout<<"MESSAGE NOW"<<msg<<endl;
 
 			msg+=";";
 			pthread_rwlock_unlock(&componentsArrayLock);

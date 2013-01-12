@@ -46,7 +46,6 @@ namespace Wizualizacja
         public void draw()
         {
             
-            Console.WriteLine("start");
             if (!isDrawingPossible)
                 return;
             Graphics bufferG;
@@ -61,7 +60,7 @@ namespace Wizualizacja
             graphics.DrawImage(bufforBmp, 0, 0);
             bufferG.Dispose();
             bufforBmp.Dispose();
-            Console.WriteLine("end");
+
         }
     }
 }

@@ -12,7 +12,8 @@ namespace Wizualizacja
         CONVEYOR,
         CONNECTOR,
         DRUG_TESTER,
-        EXPLOSIVES_TESTER
+        EXPLOSIVES_TESTER,
+        SORTING
     };
 
     class Component
