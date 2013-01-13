@@ -29,13 +29,16 @@ void* SuitcaseQueue::Run()
 	_pulse pdata;
 	for (;;)
 	{
+		cout<<" th id "<<threadChannel<<" conn id "<<threadConnId<<endl;
 		MsgReceivePulse(threadChannel , (void *)&pdata, sizeof(pdata), NULL);
 		cout<<"puls w kolejce"<<endl;
 		for(unsigned i=0;i<outputs.size();i++)
 		{
+
 			if(suitcasesInComp.empty()) break;
 			if(outputs[i]->addSuitcaseToComp(suitcasesInComp.front()))
 			{
+				MsgSendPulse(outputs[i]->getConnId(), sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, 0);
 				suitcasesInComp.pop_front();
 			}
 

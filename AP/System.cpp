@@ -73,15 +73,12 @@ void* eventsThreadFunc(void * arg)
 	MessageInfo* MI;
 	for (;;)
 	{
-		cout<<"CH ID "<<eventsChannelId<<"CCONN ID"<<eventsConnId<<endl;;
 		MsgReceivePulse(eventsChannelId, (void *)&pdata, sizeof(pdata), NULL);
-		cout<<"PULS RECEIVED"<<endl;
 		MI=(MessageInfo*)pdata.value.sival_int;
 		switch(MI->reqType)
 		{
 			case ADD_SUITCASE:
 				addSuitcaseToQueue(MI->suitcaseInfo);
-				cout<<"dodano"<<endl;
 				break;
 			case ADD_PLANE:
 				break;
@@ -109,6 +106,7 @@ bool addSuitcaseToQueue(Suitcase* s)
 	if(suitcaseQueue->addSuitcaseToComp(s))
 		cout<<"dodano bagaz"<<endl;
 	else cout<<"nie dodano bagazu"<<endl;
+
 	MsgSendPulse(suitcaseQueue->getConnId(), sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, 0);
 	return 1;
 }
@@ -151,7 +149,6 @@ bool run(){
 	componentsArray[i]=new Conveyor(6070);
 	componentsArray[++i]=new Conveyor(8090);
 
-
 	for(int i=0;i<4;i++)
 	{
 		makeConnection(componentsArray[i+3],componentsArray[i+16]);
@@ -171,6 +168,8 @@ bool run(){
 	makeConnection(componentsArray[25],componentsArray[15]);
 	makeConnection(componentsArray[15],componentsArray[2]);
 
+	for(int i=0;i<NOC;i++)
+		componentsArray[i]->start();
 	//pthread_rwlock_init(&conveyorArrayLock, NULL);
 	//pthread_rwlock_init(&connectorArrayLock, NULL);
 	pthread_rwlock_init(&componentsArrayLock, NULL);

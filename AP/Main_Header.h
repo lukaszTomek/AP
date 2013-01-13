@@ -25,6 +25,9 @@
 #define NOC 27 /*number of components*/
 #define NOP 3 /*number of planes, IT ISN'T a QUEUE OF PLANES!*/
 
+#define CHECKIN_TIME 10000
+
+
 enum RequestType
 {
 	ADD_SUITCASE,

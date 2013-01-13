@@ -23,6 +23,7 @@ protected:
 	int threadChannel;
 	int threadConnId;
 public:
+
 	bool start();
 	virtual void* Run()=0;
 	static void* ThreadFunc(void * arg)
