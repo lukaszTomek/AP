@@ -26,17 +26,20 @@ Suitcase::Suitcase(int sId, int pId, int w, int d, int b)
 	weight=w;
 	explosive=b;
 	progress=0;
+	cout<<"konstruktor suitcasea"<<endl;
 }
 
 Suitcase::Suitcase()
 {
 	// TODO Auto-generated constructor stub
+	cout<<"konstruktor2 suitcasea"<<endl;
 }
 
 
 Suitcase::~Suitcase()
 {
 	// TODO Auto-generated destructor stub
+	cout<<"konstruktor3 suitcasea"<<endl;
 }
 
 
@@ -44,7 +47,10 @@ int Suitcase::getCompId()
 {
 	return component->getComponentId();
 }
-
+void Suitcase::setComponent(Component* comp)
+{
+	component=comp;
+}
 int Suitcase::getProgress()
 {
 	return progress;
@@ -81,21 +87,18 @@ string Suitcase::toString()
 	message += out.str();
 	message +=",";
 	out.str("");
-
 	message+=addon;
 	message +=",";
 	out.str("");
-
 	out << getCompId();
 	message += out.str();
 	message +=",";
 	out.str("");
-
 	out << progress;
 	message += out.str();
 	message +=",";
 	out.str("");
-
+	//cout<<message<<endl;
 	return message;
 }
 

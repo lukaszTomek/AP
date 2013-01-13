@@ -13,7 +13,8 @@ namespace Wizualizacja
         CONNECTOR,
         DRUG_TESTER,
         EXPLOSIVES_TESTER,
-        SORTING
+        SORTING,
+        SUITCASE_QUEUE
     };
 
     class Component
@@ -23,7 +24,7 @@ namespace Wizualizacja
         int id;
         bool state;
         ComponentType compType;
-
+        public int suitcasesInComp;
 
         public Component(int id, int sX,int sY,int eX,int eY,ComponentType cType)
         {

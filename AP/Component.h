@@ -23,34 +23,33 @@ class Component : public Runnable {
 protected:
 	vector <Component*> inputs;
 	vector <Component*> outputs;
-	int inputsSize,outputsSize;
+
+	unsigned stackSize;
 	bool inputActive;
 	bool outputActive;
 	bool working;
-	sem_t actSem;
 	int componentId;
 
 public:
 	list <Suitcase*> suitcasesInComp;
-	void addsuitcaseToComp(Suitcase* s)
-	{
-		suitcasesInComp.push_front(s);
-	}
+	bool addSuitcaseToComp(Suitcase* s);          //1 isDone, 0 isnt possible
+
 	int getComponentId()
 	{
 		return componentId;
 	};
 	Component();
 	~Component();
-	void TurnOffInputs();
-	void TurnOnInputs();
+	void turnOffInputs();
+	void turnOnInputs();
 	void TurnOn();
 	void TurnOff();
+	int getConnId();
 	virtual void* Run()=0;
 	void DisactivateInput();
-	void ActivateInput();
+	void activateInput();
 	void DisactivateOutput();
-	void ActivateOutput();
+	void activateOutput();
 	string toString();
 	string toShortString();
 	virtual void Initialize();

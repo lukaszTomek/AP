@@ -17,7 +17,7 @@ namespace Wizualizacja
         int progress;
         int planeId;
         int compId;
-        Component component;
+        public Component component;
         Point positionToDraw;
 
         public string toString()
@@ -44,7 +44,7 @@ namespace Wizualizacja
 
             if ((id = getNextSuitcaseId()) < 0)
                 System.Windows.Forms.MessageBox.Show("Cannot create Suitcase");
-            System.Windows.Forms.MessageBox.Show(this.toString());
+            //System.Windows.Forms.MessageBox.Show(this.toString());
         }
         public static  void setMaxSuitcaseId(int id)
         {
@@ -58,8 +58,8 @@ namespace Wizualizacja
             weight = w;
             planeId = p_id;
             compId = comp_id;
-            progress = prog; 
-
+            progress = prog;
+            System.Windows.Forms.MessageBox.Show("jakis konstruktor");
             positionToDraw = new Point();
 
         }
@@ -67,6 +67,7 @@ namespace Wizualizacja
 
         public Suitcase(int s_id, int comp_id, int prog)
         {
+            System.Windows.Forms.MessageBox.Show("k");
             id = s_id;
             compId = comp_id;
             progress = prog;
@@ -84,7 +85,17 @@ namespace Wizualizacja
             planeId = p_id;
             compId = comp_id;
             progress = prog;
-
+            if (component == null || component.getId() != compId)
+                foreach (Component c in AirportState.components)
+                    if (c.getId() == compId)
+                    {
+                        component = c;
+                        break;
+                    }
+            if (component.getId() != compId)
+            {
+                System.Windows.Forms.MessageBox.Show("Incorrect component ID");
+            }
             positionToDraw = new Point();
 
         }

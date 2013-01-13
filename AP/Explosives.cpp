@@ -21,4 +21,5 @@ Explosives::~Explosives() {
 void *Explosives::Run()
 {
 
+	return 0;
 }

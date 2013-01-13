@@ -20,5 +20,5 @@ Connector::~Connector() {
 
 void *Connector::Run()
 {
-
+	return 0;
 }

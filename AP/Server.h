@@ -33,7 +33,7 @@ public:
 	};
 	void deallocateSuitcase()
 	{
-		delete[] suitcaseInfo;
+		//delete suitcaseInfo;
 	};
 	Plane * GetPlaneInfo()
 	{
@@ -58,8 +58,7 @@ public:
 class Server : public Runnable{
 private:
 
-	int aSConnectionId;
-	int dSConnectionId;
+
 	char request[1024];
 	string reply;
 	int clientSock;  //client's socket
@@ -69,7 +68,7 @@ private:
 public:
 
 	MessageInfo msgInfo;
-	Server(int as_id,int ds_id,int p);
+	Server(int p);
 	virtual ~Server();
 
 	void* Run();

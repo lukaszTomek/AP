@@ -15,7 +15,6 @@
 #include "Sorting.h"
 
 
-
 using namespace std;
 
 
@@ -32,21 +31,20 @@ pthread_rwlock_t actPlanesLock;
  * hC - hurtConveyor
  */
 
-pthread_t aSIThread;
+pthread_t eventsThread;
 pthread_attr_t aSIThreadAttr;
-int aSIChId;
-pthread_t dSIThread;
-pthread_attr_t dSIThreadAttr;
-int dSIChId;
+int eventsChannelId;
+int eventsConnId;
 
-list <Suitcase*> suitcasesArray;
 list <Plane*> planesArray;
 Component* componentsArray[NOC];
 list <Plane*> actPlanes;
 
 Server* specialEventsServer;
 Server* statesCheckingServer;
-unsigned qSize;
+
+SuitcaseQueue* suitcaseQueue;
+
 bool on;
 
 void destroySystem()
@@ -55,57 +53,50 @@ void destroySystem()
 	cout<<"destruktor systemu"<<endl;
 }
 
-void makeConnetion()
-{
 
-}
-
-void* aSThreadFunc(void * arg)
+void* eventsThreadFunc(void * arg)
 {
-	struct _pulse pdata;
+	_pulse pdata;
 	/* Scheduling policy: FIFO or RR */
 	int policy;
 	/* Structure of other thread parameters */
 	struct sched_param param;
-	cout<<"ASprzed"<<endl;
 	/* Read modify and set new thread priority */
 	pthread_getschedparam( pthread_self(), &policy, &param);
 	param.sched_priority = sched_get_priority_max(policy);
 	pthread_setschedparam( pthread_self(), policy, &param);
 
 	/* Create new channel */
-	aSIChId = ChannelCreate(0);
+	eventsChannelId = ChannelCreate(0);
+
+
+	MessageInfo* MI;
 	for (;;)
 	{
-		MsgReceivePulse(aSIChId, (void *)&pdata, sizeof(pdata), NULL);
-		cout<<"nowy suitcase"<<endl;
+		cout<<"CH ID "<<eventsChannelId<<"CCONN ID"<<eventsConnId<<endl;;
+		MsgReceivePulse(eventsChannelId, (void *)&pdata, sizeof(pdata), NULL);
+		cout<<"PULS RECEIVED"<<endl;
+		MI=(MessageInfo*)pdata.value.sival_int;
+		switch(MI->reqType)
+		{
+			case ADD_SUITCASE:
+				addSuitcaseToQueue(MI->suitcaseInfo);
+				cout<<"dodano"<<endl;
+				break;
+			case ADD_PLANE:
+				break;
+			default:
+				break;
+			//TODO
+
+
+		}
+		//cout<<"wypisuje "<<suitcasesArray.front()->toString()<<endl;
 	}
 
 	return 0;
 }
-void* dSThreadFunc(void * arg)
-{
-	struct _pulse pdata;
-	/* Scheduling policy: FIFO or RR */
-	int policy;
-	/* Structure of other thread parameters */
-	struct sched_param param;
-	cout<<"DSprzed"<<endl;
-	/* Read modify and set new thread priority */
-	pthread_getschedparam( pthread_self(), &policy, &param);
-	param.sched_priority = sched_get_priority_max(policy);
-	pthread_setschedparam( pthread_self(), policy, &param);
 
-	/* Create new channel */
-	dSIChId = ChannelCreate(0);
-
-	for (;;)
-	{
-		MsgReceivePulse(dSIChId, (void *)&pdata, sizeof(pdata), NULL);
-
-	}
-	return 0;
-}
 
 /* LISTA BAGA¯Y W KOLEJCE PRZED CHECKINAMI
  * front - element pierwszy który wychodzi - pocztek kolejki
@@ -115,13 +106,17 @@ void* dSThreadFunc(void * arg)
  * */
 bool addSuitcaseToQueue(Suitcase* s)
 {
-	cout<<"dodawanie suitcase'a"<<endl;
-	if(suitcasesArray.size()==qSize)
-		return 0;
-	suitcasesArray.push_back(s);
+	if(suitcaseQueue->addSuitcaseToComp(s))
+		cout<<"dodano bagaz"<<endl;
+	else cout<<"nie dodano bagazu"<<endl;
+	MsgSendPulse(suitcaseQueue->getConnId(), sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, 0);
 	return 1;
 }
-
+bool addPlaneToQueue(Plane* plane)
+{
+	planesArray.push_back(plane);
+	return 1;
+}
 bool makeConnection(Component * a, Component * b)
 {
 
@@ -130,7 +125,7 @@ bool makeConnection(Component * a, Component * b)
 	return true;
 }
 
-void dropSuitcase(Suitcase suitcase, int conveyor_id)
+void dropSuitcase(Suitcase* suitcase, int conveyor_id)
 {
 	return;
 }
@@ -138,11 +133,12 @@ void dropSuitcase(Suitcase suitcase, int conveyor_id)
 bool run(){
 
 	on=1;
-	qSize=1024;
 	/*TWORZENIE KOMPONENTÓW*/
 	componentsArray[0]=new Drugs(55);
 	componentsArray[1]=new Explosives(75);
 	componentsArray[2]=new Sorting(95);
+	componentsArray[26]=new SuitcaseQueue(888);
+	suitcaseQueue=(SuitcaseQueue*)(int)componentsArray[26];
 	int i=3;
 	for(int n=1;n<=4;n++,i++)
 		componentsArray[i]=new Checkin(n);
@@ -155,9 +151,6 @@ bool run(){
 	componentsArray[i]=new Conveyor(6070);
 	componentsArray[++i]=new Conveyor(8090);
 
-	//debug - dodawanie nowej walizki do systemu.
-	componentsArray[5]->addsuitcaseToComp(new Suitcase(9,125,125,1,0,componentsArray[8]));
-	componentsArray[24]->addsuitcaseToComp(new Suitcase(9,125,125,1,0,componentsArray[24]));
 
 	for(int i=0;i<4;i++)
 	{
@@ -165,6 +158,7 @@ bool run(){
 		makeConnection(componentsArray[i+16],componentsArray[i+7]);
 		makeConnection(componentsArray[i+7],componentsArray[i+20]);
 		makeConnection(componentsArray[i+20],componentsArray[i+8]);
+		makeConnection(componentsArray[26],componentsArray[i+3]);   //connection between suitcaseQueue and Checkins;
 	}
 	makeConnection(componentsArray[11],componentsArray[0]);
 	makeConnection(componentsArray[0],componentsArray[12]);
@@ -194,21 +188,19 @@ bool run(){
 	pthread_attr_setschedpolicy(&aSIThreadAttr, SCHED_FIFO);
 
 	/* Start thread */
-	if (pthread_create( &aSIThread, NULL, aSThreadFunc, &aSIThreadAttr)) {
+	if (pthread_create( &eventsThread, NULL, eventsThreadFunc, &aSIThreadAttr)) {
 		cout<< "Cannot create AS_Thread."<<endl;
 		return 1;
 	}
+
+
 	delay(100);
-	pthread_attr_init(&dSIThreadAttr);
-	pthread_attr_setschedpolicy(&dSIThreadAttr, SCHED_FIFO);
 
-		/* Start thread */
-	if (pthread_create( &dSIThread, NULL, dSThreadFunc, &dSIThreadAttr)) {
-		cout<< "Cannot create DS_Thread."<<endl;
-		return 1;
-	}
+	eventsConnId=ConnectAttach(0,getpid(), eventsChannelId,0,0);
 
-	specialEventsServer =new Server(aSIChId,dSIChId,SPECIAL_PORT);
+	delay(100);
+
+	specialEventsServer =new Server(SPECIAL_PORT);
 	if(specialEventsServer->start())
 	{
 		cout<<"Wystapil blad przy ladowaniu serwera"<<endl;
@@ -217,7 +209,7 @@ bool run(){
 	else
 		cout<<"Serwer zaladowany"<<endl;
 
-	statesCheckingServer =new Server(aSIChId,dSIChId,STATES_PORT);
+	statesCheckingServer =new Server(STATES_PORT);
 	if(statesCheckingServer->start())
 	{
 		cout<<"Wystapil blad przy ladowaniu serwera"<<endl;

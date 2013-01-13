@@ -22,7 +22,7 @@
 #define SPECIAL_PORT 5678
 #define STATES_PORT 5679
 
-#define NOC 26 /*number of components*/
+#define NOC 27 /*number of components*/
 #define NOP 3 /*number of planes, IT ISN'T a QUEUE OF PLANES!*/
 
 enum RequestType

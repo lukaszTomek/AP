@@ -7,13 +7,13 @@
 
 #include "Server.h"
 #include "System.h"
+#include "SuitcaseQueue.h"
 #include <fstream>
 
-Server::Server(int as_id, int ds_id, int p ) {
+Server::Server( int p ) {
 	// TODO Auto-generated constructor stub
 	maxPriority=0;
-	aSConnectionId=as_id;
-	dSConnectionId=ds_id;
+
 	this->port=p;
 }
 
@@ -53,12 +53,12 @@ void* Server::Run()
 		{
 			//WYKOMENTOWANE ¯EBYM MÓGL ZROBIC SWOJEGO REQUESTA DO DESERIALIZACJI
 			iResult=recv(clientSock, request, 1024, 0);
-			cout<<"nowy req |"<<request<<"|"<<endl;
-
+			//cout<<"nowy req |"<<request<<"|"<<endl;
+			//cout<<suitcaseQueue->suitcasesInComp.size()<<endl;
 			if ( iResult > 0 )
 			{
 				//cout<<"Bytes received: "<< iResult<<endl;
-				if(iResult>1)cout<<request<<endl;
+				//if(iResult>1)cout<<"REQ:"<<request<<"|"<<endl;
 			}
 			else if ( iResult == 0 )
 				printf("Connection closed\n");
@@ -75,34 +75,15 @@ void* Server::Run()
 
 			switch(msgInfo.reqType)
 			{
-			case GET_STATE:
-				Serialize(reply,GET_STATE);
-				break; 			//1 means succes and 0 failure
-
 			case GET_FULL_STATE:
 				Serialize(reply,GET_FULL_STATE);
 				break; 					  //1 means succes and 0 failure
 
 			case ADD_SUITCASE:
-				cout<<"dodawanie bagazu"<<endl;
-				MsgSendPulse(aSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.suitcaseInfo));
-				Serialize(reply,1);
-				break;
-
 			case ADD_PLANE:
-				//MsgSendPulse(dSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.planeInfo));
-				cout<<"a"<<endl;
-				Serialize(reply,1);
-				cout<<"b"<<endl;
-				break;
-
-			case DROP_SUITCASE_FROM_CONVEYOR:
-				MsgSendPulse(dSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.suitcaseInfo));
-				Serialize(reply,1);
-				break;
-
 			case HURT_CONVEYOR:
-				MsgSendPulse(dSConnectionId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo.componentInfo));
+			case DROP_SUITCASE_FROM_CONVEYOR:
+				MsgSendPulse(eventsConnId, sched_get_priority_max(SCHED_FIFO), _PULSE_CODE_MAXAVAIL, (int)&(msgInfo));
 				Serialize(reply,1);
 				break;
 
@@ -110,8 +91,7 @@ void* Server::Run()
 				cout<<"Urecognised command"<<endl;
 				break;
 			};
-			if(port==SPECIAL_PORT)
-			cout<<"odp "<<reply<<endl;
+			//cout<<"wysylam|"<<reply<<"|koniec"<<endl;
 			iResult=send(clientSock,reply.c_str(),reply.length(),0);
 			if ( iResult > 0 )
 			{
@@ -127,7 +107,6 @@ void* Server::Run()
 				cout<<"That means: "<<strerror( errvalue ) ;
 				break;
 			}
-			cout<<"k";
 		}while(iResult);
 
 	}
@@ -161,11 +140,6 @@ bool Server::Serialize(string& msg, int replyInfo)
 		case GET_FULL_STATE:
 			{
 				msg=makeFullState();
-				break;
-			}
-		case GET_STATE:
-			{
-				msg=makeState();
 				break;
 			}
 		default:
@@ -221,9 +195,7 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 
 		MI.deallocateSuitcase();
 		MI.allocateSuitcase(id,planeId,weight,drug,bomb);
-
 		cout<<"Allocate Suitcase "<<"Id "<<id<<"plane id "<<planeId<<"weight "<<weight<<"drug "<<drug<<"Bomb "<<bomb<<endl;
-
 		break;
 	}
 	case ADD_PLANE:
@@ -255,9 +227,7 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 			}
 			i++;
 		} while (i<=msg.length());
-		cout<<"jeden"<<endl;
 		MI.deallocatePlane();
-		cout<<"dwa"<<endl;
 		MI.allocatePlane(idP,time);
 
 		cout<<"AllocatePlane "<<"Plane Id "<<idP<<" time "<<time<<endl;
@@ -297,11 +267,6 @@ bool Server::Deserialize(string msg, MessageInfo& MI)
 			//cout<<"Client want to get a full state"<<endl;
 			break;
 		}
-	case GET_STATE:
-		{
-			//cout<<"Client want to get a state"<<endl;
-			break;
-		}
 	default:
 		cout<<"Urecognised Request Type"<<endl;
 		return 0;
@@ -318,7 +283,7 @@ string Server::makeFullState()
 
 /*INFO BAGA¯E*/
 
-	for(int i=0;i<NOC;i++)
+	for(int i=0;i<NOC-1;i++)
 	{
 		for(list<Suitcase*>::iterator it=componentsArray[i]->suitcasesInComp.begin();it!=componentsArray[i]->suitcasesInComp.end(); it++)
 		{
@@ -331,10 +296,10 @@ string Server::makeFullState()
 			pthread_rwlock_unlock(&componentsArrayLock);
 		}
 	}
-
-	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
+    ///////////////////////////bardzo brzydkie rozwiazanie
+	for(list<Suitcase*>::iterator it=suitcaseQueue->suitcasesInComp.begin();it!=suitcaseQueue->suitcasesInComp.end();it++)
 	{
-		pthread_rwlock_rdlock(&suitcasesArrayLock);
+		pthread_rwlock_rdlock(&componentsArrayLock);
 		msg+=(*(*it)).toString();
 		msg+=";";
 		pthread_rwlock_unlock(&suitcasesArrayLock);
@@ -342,7 +307,7 @@ string Server::makeFullState()
 	msg+="/";
 
 /*INFO KOMPONENETY*/
-	for(int i=0;i<NOC;i++)
+	for(int i=0;i<NOC;i++)                                ///musialem odjac -1 zaby nie wypisywal drugi raz
 	{
 		pthread_rwlock_rdlock(&componentsArrayLock);
 		msg+=componentsArray[i]->toString();
@@ -388,86 +353,4 @@ string Server::makeFullState()
 	return msg;
 
 }
-
-string Server::makeState()
-{
-	string msg="";
-	msg+="5";
-	/*INFO BAGA¯E*/
-
-		for(int i=0;i<NOC;i++)
-		{
-			for(list<Suitcase*>::iterator it=componentsArray[i]->suitcasesInComp.begin();it!=componentsArray[i]->suitcasesInComp.end();it++)
-			{
-				pthread_rwlock_rdlock(&componentsArrayLock);
-				msg+=(*it)->toShortString();
-				msg+=";";
-				pthread_rwlock_unlock(&componentsArrayLock);
-			}
-		}
-
-	msg+="/";
-	/*kolejka do check-inow*/
-	for(list<Suitcase*>::iterator it=suitcasesArray.begin();it!=suitcasesArray.end();it++)
-	{
-		pthread_rwlock_rdlock(&suitcasesArrayLock);
-		msg+=(*it)->toShortString();
-		msg+=";";
-		pthread_rwlock_unlock(&suitcasesArrayLock);
-	}
-
-	msg+="/";
-
-/*INFO KOMPONENETY*/
-
-	for(int i=0;i<NOC;i++)
-	{
-		pthread_rwlock_rdlock(&componentsArrayLock);
-		msg+=componentsArray[i]->toShortString();
-		pthread_rwlock_unlock(&componentsArrayLock);
-		msg+=";";
-	}
-
-	msg+="/";
-
-
-	/*INFO SAMOLOTY*/
-	for(list<Plane*>::iterator it=actPlanes.begin();it!=actPlanes.end();it++)
-	{
-		pthread_rwlock_rdlock(&actPlanesLock);
-		msg+=(*it)->toString();
-		msg+=";";
-		pthread_rwlock_unlock(&actPlanesLock);
-	}
-
-		msg+="/";
-	/*KOLEJKA SAMOLOTÓW*/
-
-	for(list<Plane*>::iterator it=planesArray.begin();it!=planesArray.end();it++)
-	{
-		pthread_rwlock_rdlock(&planesArrayLock);
-		msg+=(*it)->toShortString();
-		pthread_rwlock_rdlock(&planesArrayLock);
-		msg+=";";
-	}
-
-	msg+="/";
-
-	msg+="0";
-	msg+="/";
-	/*TODO FLAGA WYKRYCIA NARKOTYKÓW*/
-	msg+="0";
-	msg+="/";
-	/*TODO FLAGA WYKRYCIA WYBUCHOWYCH*/
-	msg+="0";
-	msg+="/";
-	/*TODO ILOSC NARKOTYKOW*/
-	msg+="0";
-	msg+="/";
-	/*TODO ILOSC WYBUCHOWYCH*/
-
-	return msg;
-
-}
-
 

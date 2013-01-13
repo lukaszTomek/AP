@@ -21,4 +21,5 @@ Sorting::~Sorting() {
 void *Sorting::Run()
 {
 
+	return 0;
 }

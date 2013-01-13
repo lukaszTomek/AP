@@ -30,4 +30,5 @@ void *Conveyor::Run()
 			s->setProgress((s->getProgress()+1)%100);
 		}
 	}
+	return 0;
 }

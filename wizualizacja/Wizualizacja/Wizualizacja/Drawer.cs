@@ -56,6 +56,13 @@ namespace Wizualizacja
             {
                 s.draw(bufferG);
             }
+            foreach (Component comp in AirportState.components)
+            {
+                PointF pointF = (PointF)comp.getPosition(50);
+                pointF.X += 20;
+                pointF.Y += 20;
+               bufferG.DrawString(comp.suitcasesInComp.ToString(), SystemFonts.DefaultFont, Brushes.Black, pointF);
+            }
             iteration++;
             graphics.DrawImage(bufforBmp, 0, 0);
             bufferG.Dispose();

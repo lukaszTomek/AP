@@ -10,6 +10,7 @@ namespace Wizualizacja
     {
         static int maxPlaneId=-1;
         DateTime departureTime;
+        
         int elapsedTime; 
         //dopisałem elapsed time, bo nie wiedziałem jak korzystac z DateTime, anie tego zrzutować, ani nic, a bierzemy pod uwagę okres czasu
         string planeName;
@@ -79,13 +80,16 @@ namespace Wizualizacja
 
     static class AirportState
     {
+        static Form1 form;
+
         public static List<Plane> planesArray;
         public static List<Plane> planesInUse;
         public static List<Suitcase> suitcasesArray;
         public static List<Component> components;
 
-        public static void initialize()
+        public static void initialize(Form1 f)
         {
+            form = f;
             planesArray = new List<Plane>();
             suitcasesArray = new List<Suitcase>();
             planesArray.Add(new Plane());          //test debug - do usuniecia
@@ -126,10 +130,9 @@ namespace Wizualizacja
 
             components.Add(new Component(90, 435, 275, 435, 275, ComponentType.CONNECTOR));
             components.Add(new Component(90, 375, 275, 375, 275, ComponentType.SORTING));
-            
+
+            components.Add(new Component(888, 20, 550, 20, 550, ComponentType.SUITCASE_QUEUE));
             /*examples*/
-            suitcasesArray.Add(new Suitcase(selectedDangerous.NONE, 100, 1, 110, 0));
-            planesArray.Add(new Plane());
 
         }
         public static  List<Plane> getPlanes()
@@ -142,13 +145,15 @@ namespace Wizualizacja
         {
 
             MessageInfo MI = client.Deserialize(data);
-
+            suitcasesArray = null;
             suitcasesArray = MI.suitcasesArray;
-            planesArray = MI.planesWaitingArray;
+            
+            //planesArray = MI.planesWaitingArray;
             planesInUse = MI.planesArray;
 
             Plane.setMaxPlaneId(MI.maxPlaneId);
             Suitcase.setMaxSuitcaseId(MI.maxSuitcaseId);
+
 
         }
 

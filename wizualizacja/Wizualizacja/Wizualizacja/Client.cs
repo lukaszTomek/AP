@@ -7,11 +7,11 @@ using System.Threading;
 
 namespace Wizualizacja
 {
-    
+
     class Client
     {
         System.Net.Sockets.TcpClient socket;
-        
+
         string ip;
         int port;
 
@@ -25,10 +25,11 @@ namespace Wizualizacja
             ip = IP;
             this.port = port;
 
-            try{
-            socket.Connect(IP, port);
-            } 
-            catch (SocketException e) 
+            try
+            {
+                socket.Connect(IP, port);
+            }
+            catch (SocketException e)
             {
                 //System.Windows.Forms.MessageBox.Show("Problem connecting to host");
                 Console.WriteLine(e.ToString());
@@ -38,11 +39,8 @@ namespace Wizualizacja
         }
         public string SendRequest(string data)
         {
-
             try
             {
-                if(port==5678)
-                    Console.WriteLine(data);
                 NetworkStream serverStream = socket.GetStream();
                 byte[] outStream = System.Text.Encoding.ASCII.GetBytes(data);
                 serverStream.Write(outStream, 0, outStream.Length);
@@ -54,7 +52,7 @@ namespace Wizualizacja
 
                 return returndata;
 
-                
+
             }
             catch (Exception)
             {
@@ -62,54 +60,54 @@ namespace Wizualizacja
                 System.Windows.Forms.MessageBox.Show("Problems with connection");
                 return "";
             }
-            
-            
+
+
         }
 
         public string Serialize(MessageInfo msgInfo)
         {
-            string msg="";
-            switch(msgInfo.reqType)
+            string msg = "";
+            switch (msgInfo.reqType)
             {
                 case RequestType.addSuitcase:
-                {
-                    msg += "0";
-                    msg += msgInfo.suitcasesArray[0].toString();
+                    {
+                        msg += "0";
+                        msg += msgInfo.suitcasesArray[0].toString();
 
-                    break;
-                }
+                        break;
+                    }
 
                 case RequestType.addPlane:
-                {
-                    msg += "1";
-                    msg += msgInfo.planesArray[0].toString();
-                    Console.WriteLine(msg);
-                    break;
-                }
+                    {
+                        msg += "1";
+                        msg += msgInfo.planesArray[0].toString();
+                        Console.WriteLine(msg);
+                        break;
+                    }
 
                 case RequestType.dropSuitcaseFromConveyor:
-                {
-                    msg += "2";
-                    
-                    //dopisac numer ktory zepsuc
-                    break;
-                }
+                    {
+                        msg += "2";
+
+                        //dopisac numer ktory zepsuc
+                        break;
+                    }
                 case RequestType.hurtConveyor:
-                {
-                    msg += "3";
-                    //dopisac numer ktory wyrzucic
-                    break;
-                }
+                    {
+                        msg += "3";
+                        //dopisac numer ktory wyrzucic
+                        break;
+                    }
                 case RequestType.getFullState:
-                {
-                    msg += "4";
-                    break;
-                }
+                    {
+                        msg += "4";
+                        break;
+                    }
                 case RequestType.getState:
-                {
-                    msg += "5";
-                    break;
-                }
+                    {
+                        msg += "5";
+                        break;
+                    }
             }
             return msg;
         }
@@ -122,7 +120,7 @@ namespace Wizualizacja
             //    Console.WriteLine("dostalem " + msg);
             if (msg == "")
             {
-                System.Windows.Forms.MessageBox.Show(port.ToString());
+
 
                 return msgInfo;
             }
@@ -177,17 +175,19 @@ namespace Wizualizacja
             int suitcase_id = 0, plane_id = 0, weight = 0, c_id = 0, progress = 0;
             int comp_id = 0, state = 0;
             int p_id = 0, time = 0, sleeve = 0;
-            selectedDangerous danger=selectedDangerous.NONE;
+            selectedDangerous danger = selectedDangerous.NONE;
             Suitcase s;
             StateInfo c;
             Plane p;
-            
+
             string val;
 
-            MI.maxPlaneId = -1;
-            MI.maxSuitcaseId = -1;
+            MI.maxPlaneId = 0;
+            MI.maxSuitcaseId = 0;
             //string msg = "014,43222,33,n,1043,50,;14324,22,33,n,1990,50,;/15190,22,;17,12,;/152,215,1,;8099,151,2,;151,122,3,;/152,215,;8099,151,;/0/1/12/10/";
             /*suitcaseinfo*/
+            foreach (Component comp in AirportState.components)
+                comp.suitcasesInComp = 0;
             while (true)
             {
                 i++;
@@ -224,7 +224,7 @@ namespace Wizualizacja
                         if (val == "n")
                         { danger = selectedDangerous.DRUGS; }
                         else if (val == "w")
-                        { danger= selectedDangerous.EXPLOSIVES;}
+                        { danger = selectedDangerous.EXPLOSIVES; }
                         else if (val == "0")
                         { danger = selectedDangerous.NONE; }
                         else
@@ -259,9 +259,10 @@ namespace Wizualizacja
                     start++;
                     if (suitcase_id > MI.maxSuitcaseId)
                         MI.maxSuitcaseId = suitcase_id;
-                    s=new Suitcase(danger, suitcase_id, weight, plane_id, c_id, progress);
+                    s = new Suitcase(danger, suitcase_id, weight, plane_id, c_id, progress);
+                    s.component.suitcasesInComp += 1;
                     MI.suitcasesArray.Add(s);
-                    
+
                     //Console.WriteLine("NEXT ITEM");
                 }
                 if (msg[i] == '/')
@@ -272,7 +273,7 @@ namespace Wizualizacja
                 }
             }
 
-           // Console.WriteLine("Components");
+            // Console.WriteLine("Components");
 
             while (true)
             {
@@ -300,7 +301,7 @@ namespace Wizualizacja
                 {
                     step = 0;
                     start++;
-                    c = new StateInfo(comp_id,state);
+                    c = new StateInfo(comp_id, state);
                     MI.statesArray.Add(c);
                     /*Console.WriteLine(comp_id);
                     Console.WriteLine(state);
@@ -309,7 +310,7 @@ namespace Wizualizacja
                 if (msg[i] == '/')
                 {
                     start++;
-                   // Console.WriteLine("END");
+                    // Console.WriteLine("END");
                     break;
                 }
 
@@ -422,9 +423,9 @@ namespace Wizualizacja
                 if (msg[i] == '/' & step == 0)
                 {
                     if ((msg.Substring(start, i - start)) == "1")
-                        MI.detected_drug=true;
+                        MI.detected_drug = true;
                     else
-                        MI.detected_drug=false;
+                        MI.detected_drug = false;
                     start = i + 1;
                     step++;
 
@@ -435,9 +436,9 @@ namespace Wizualizacja
                 {
                     if ((msg.Substring(start, i - start)) == "1")
                         MI.detected_bomb = true;
-                        
+
                     else
-                        MI.detected_bomb=false;
+                        MI.detected_bomb = false;
                     start = i + 1;
                     step++;
 
@@ -465,7 +466,7 @@ namespace Wizualizacja
             return MI;
         }
 
-        
+
         public static MessageInfo getState(string msg)
         {
             MessageInfo MI = new MessageInfo();
@@ -481,7 +482,7 @@ namespace Wizualizacja
             Plane p;
 
             //string msg = "014,43222,33,n,1043,50,;14324,22,33,n,1990,50,;/15190,22,;17,12,;/152,215,1,;8099,151,2,;151,122,3,;/152,215,;8099,151,;/0/1/12/10/";
-            
+
             /*suitcaseinfo*/
 
             while (true)
@@ -498,8 +499,8 @@ namespace Wizualizacja
                         step++;
 
                         continue;
-                    } 
-                 
+                    }
+
                     if (step == 1)
                     {
                         c_id = Convert.ToInt32(msg.Substring(start, i - start));
@@ -660,9 +661,7 @@ namespace Wizualizacja
                     start++;
                     p = new Plane(p_id, time);
                     MI.planesWaitingArray.Add(p);
-                    /*Console.WriteLine(p_id);
-                    Console.WriteLine(time);
-                    Console.WriteLine("NEXT ITEM");*/
+
                 }
                 if (msg[i] == '/')
                 {
@@ -701,7 +700,7 @@ namespace Wizualizacja
                     break; //TUTAJ KONIEC DESERIALIZACJI!!
                 }
 
-                
+
             }
 
             return MI;

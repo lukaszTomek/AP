@@ -31,10 +31,16 @@ namespace Wizualizacja
             running = true;
             isGetFullStateNecessary = true;
 
-            AirportState.initialize();
+            AirportState.initialize(this);
             drawer = new Drawer(pictureBox1.CreateGraphics());
             Thread drawingThread=new Thread(new ThreadStart( drawingLoop ) );
             drawingThread.Start();
+            foreach (Plane p in AirportState.planesArray)
+            {
+                richTextBox1.Text = "";
+                richTextBox1.Text += p.toString();
+                richTextBox1.Text += "\n";
+            }
         }
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -49,7 +55,7 @@ namespace Wizualizacja
                 AirportState.interpretMakeStatesQuery(
                         stateCheckingClient.SendRequest(stateCheckingClient.Serialize(new MessageInfo(RequestType.getFullState))),
                         stateCheckingClient);
-
+                
                 isGetFullStateNecessary = true;
             }
             else if (sCheckingConnected)
@@ -74,6 +80,8 @@ namespace Wizualizacja
             timer.Enabled = true;
             while (running)
             {
+                
+                
             }
             drawer.stop();
         }
@@ -115,9 +123,7 @@ namespace Wizualizacja
                     newSuitcaseDialog.getPlaneID()
                     );
 
-
                 specialEventsClient.SendRequest(specialEventsClient.Serialize(new MessageInfo(suitcase)));
-                
             }
 
 
@@ -136,9 +142,8 @@ namespace Wizualizacja
                 Plane plane=new Plane(planeDialog.getTime()); 
                 MessageInfo MI = new MessageInfo(RequestType.addPlane);
                 MI.planesArray.Add(plane);
-                //MI=specialEventsClient.Deserialize
-                Console.WriteLine("fk"+specialEventsClient.Serialize(MI));
-                    specialEventsClient.SendRequest(specialEventsClient.Serialize(MI));
+
+                specialEventsClient.SendRequest(specialEventsClient.Serialize(MI));
                 //Console.WriteLine
             }
         }
@@ -152,6 +157,15 @@ namespace Wizualizacja
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string s="";
+            foreach (Component comp in AirportState.components)
+                if (comp.suitcasesInComp != 0)
+                    s += (comp.suitcasesInComp.ToString()+ "\n");
+            MessageBox.Show(s);
         }
 
 

@@ -19,9 +19,9 @@ protected:
 	pthread_attr_t threadAttr;
 	int policy;
 	sched_param param;
-
 	int errvalue;
-
+	int threadChannel;
+	int threadConnId;
 public:
 	bool start();
 	virtual void* Run()=0;

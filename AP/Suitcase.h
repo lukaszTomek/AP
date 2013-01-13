@@ -24,7 +24,7 @@ private:
 	int weight;
 	bool explosive;
 	int progress; // value from 0 to 100
-	Component *component;
+	Component* component;
 
 public:
 
@@ -35,8 +35,8 @@ public:
 	string toString();
 	string toShortString();
 	int getCompId();
-
 	int getProgress();
+	void setComponent(Component* comp);
 	void setProgress(int prog);
 };
 

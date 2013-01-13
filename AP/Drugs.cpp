@@ -21,4 +21,5 @@ Drugs::~Drugs() {
 void *Drugs::Run()
 {
 
+	return 0;
 }
